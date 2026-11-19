@@ -1,0 +1,1582 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Free, modern invoice generator. Create, customize, and download professional PDF invoices in seconds with multi-currency support." />
+    <link rel="icon" href="data:," />
+    <title>Invoice Generator — Create &amp; Download Professional Invoices</title>
+    <style>
+      :root{
+        --radius:.625rem;
+        --background:#ffffff;
+        --foreground:#031222;
+        --card:#ffffff;
+        --card-foreground:#031222;
+        --primary:#004086;
+        --primary-foreground:#f9fcff;
+        --secondary:#ebf3fc;
+        --muted:#f0f6fc;
+        --muted-foreground:#576574;
+        --accent:#1096e9;
+        --accent-foreground:#f9fcff;
+        --destructive:#e40014;
+        --destructive-foreground:#f8fafc;
+        --border:#e2e8f0;
+        --input:#e2e8f0;
+        --ring:#90a1b9;
+        --page-bg:#f5f9fc;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --background:#020618;
+          --foreground:#f8fafc;
+          --card:#0f172b;
+          --card-foreground:#f8fafc;
+          --primary:#e2e8f0;
+          --primary-foreground:#0f172b;
+          --secondary:#1d293d;
+          --muted:#1d293d;
+          --muted-foreground:#90a1b9;
+          --accent:#1d293d;
+          --accent-foreground:#f8fafc;
+          --destructive:#ff6568;
+          --destructive-foreground:#f8fafc;
+          --border:#ffffff1a;
+          --input:#ffffff26;
+          --ring:#6a7282;
+          --page-bg:#020618;
+        }
+      }
+      *{box-sizing:border-box}
+      html{-webkit-text-size-adjust:100%}
+      body{
+        margin:0;
+        font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        background:var(--page-bg);
+        color:var(--foreground);
+        line-height:1.5;
+      }
+      button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2rem}
+      h1,h2,h3,p{margin:0}
+      button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+      input,textarea,select{font:inherit;color:inherit}
+      .wrap{max-width:64rem;margin:0 auto;padding:2rem 1rem}
+      .wrap-narrow{max-width:56rem;margin:0 auto;padding:2rem 1rem}
+
+      /* ---------- buttons ---------- */
+      .btn{
+        display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+        height:2.5rem;padding:0 1rem;border-radius:.5rem;
+        font-size:.875rem;font-weight:500;line-height:1;white-space:nowrap;
+        transition:background-color .15s,color .15s,opacity .15s;
+      }
+      .btn svg{width:1rem;height:1rem;flex-shrink:0}
+      .btn-primary{background:var(--primary);color:var(--primary-foreground)}
+      .btn-primary:hover{opacity:.9}
+      .btn-outline{background:var(--card);border:1px solid var(--input);box-shadow:0 1px 2px rgb(0 0 0/.05)}
+      .btn-outline:hover{background:var(--muted)}
+      .btn-ghost{color:var(--foreground)}
+      .btn-ghost:hover{background:var(--muted)}
+      .btn-sm{height:2.25rem;padding:0 .75rem;font-size:.875rem}
+      .btn:disabled{opacity:.6;cursor:not-allowed}
+      .icon-btn{
+        display:inline-flex;align-items:center;justify-content:center;
+        width:2.25rem;height:2.25rem;border-radius:.5rem;flex-shrink:0;
+      }
+      .icon-btn svg{width:1rem;height:1rem}
+      .icon-btn-outline{background:var(--card);border:1px solid var(--input);box-shadow:0 1px 2px rgb(0 0 0/.05)}
+      .icon-btn-outline:hover{background:var(--muted)}
+
+      /* ---------- form controls ---------- */
+      .input,.textarea,.select{
+        display:flex;width:100%;border:1px solid var(--input);background:transparent;
+        border-radius:.5rem;box-shadow:0 1px 2px rgb(0 0 0/.05);
+        font-size:1rem;padding:.25rem .75rem;
+      }
+      .input{height:2.5rem;align-items:center}
+      .textarea{padding:.5rem .75rem;min-height:60px;line-height:1.5}
+      @media (min-width:768px){.input,.textarea,.select{font-size:.875rem}}
+      .input::placeholder,.textarea::placeholder{color:var(--muted-foreground)}
+      .input:focus,.textarea:focus,.select:focus{outline:none;box-shadow:0 0 0 1px var(--ring)}
+      .select{
+        height:2.5rem;align-items:center;appearance:none;-webkit-appearance:none;cursor:pointer;
+        background-color:var(--card);padding-right:2rem;
+        background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23576574' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat:no-repeat;background-position:right .6rem center;
+      }
+      .bare-input{
+        border-color:transparent;background:transparent;box-shadow:none;
+      }
+      .bare-input:focus{border-color:var(--input);background:var(--card);box-shadow:0 1px 2px rgb(0 0 0/.05)}
+      textarea{resize:vertical}
+      .no-resize{resize:none}
+
+      /* ---------- editable labels ---------- */
+      .lbl{
+        display:inline-block;min-width:1ch;cursor:text;border-radius:.25rem;
+        padding:0 .125rem;outline:none;transition:background-color .15s;
+      }
+      .lbl:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+      .lbl:focus{background:color-mix(in srgb,var(--accent) 15%,transparent);box-shadow:0 0 0 1px var(--ring)}
+      .lbl-xs{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.025em;color:var(--muted-foreground)}
+      .lbl-sm{font-size:.875rem;color:var(--muted-foreground)}
+      .lbl-sm-bold{font-size:.875rem;font-weight:700;color:var(--foreground)}
+      .lbl-on-primary{color:var(--primary-foreground)}
+      .lbl-title{font-size:2.25rem;font-weight:700;letter-spacing:-.025em;color:var(--primary);line-height:1.1}
+      .lbl-prefix{font-size:.875rem;font-weight:500;color:var(--muted-foreground)}
+
+      /* ---------- layout blocks ---------- */
+      .card{background:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:1rem;box-shadow:0 1px 3px 0 rgb(0 0 0/.1),0 1px 2px -1px rgb(0 0 0/.1)}
+      .page-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1.5rem}
+      .page-head h1{font-size:1.5rem;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+      .page-head .sub{font-size:.875rem;color:var(--muted-foreground)}
+      .head-actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+      .currency-wrap{width:9rem}
+
+      .ai-card{padding:1.25rem;margin-bottom:1.5rem}
+      .ai-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap}
+      .ai-head svg{width:1rem;height:1rem;color:var(--primary)}
+      .ai-head h2{font-size:1rem;font-weight:600}
+      .ai-head span{font-size:.75rem;color:var(--muted-foreground)}
+      .ai-actions{margin-top:.75rem;display:flex;justify-content:flex-end}
+
+      .invoice-card{padding:2rem}
+      @media (min-width:768px){.invoice-card{padding:3rem}}
+      .inv-top{display:flex;flex-direction:column;gap:1.5rem}
+      @media (min-width:768px){.inv-top{flex-direction:row;align-items:flex-start;justify-content:space-between}}
+      .logo-upload{
+        display:flex;height:6rem;width:12rem;cursor:pointer;flex-direction:column;
+        align-items:center;justify-content:center;border-radius:.5rem;
+        border:2px dashed var(--border);background:color-mix(in srgb,var(--muted) 40%,transparent);
+        font-size:.875rem;color:var(--muted-foreground);transition:border-color .15s,background-color .15s;
+      }
+      .logo-upload:hover{border-color:var(--primary);background:var(--muted)}
+      .logo-upload svg{width:1.25rem;height:1.25rem;margin-bottom:.25rem}
+      .logo-preview{position:relative;display:inline-block}
+      .logo-preview img{display:block;height:6rem;width:auto;max-width:260px;border-radius:.5rem;object-fit:contain}
+      .logo-tools{position:absolute;top:-.5rem;right:-.5rem;display:none;gap:.25rem}
+      .logo-preview:hover .logo-tools{display:flex}
+      .logo-tool{
+        display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+        width:1.5rem;height:1.5rem;border-radius:9999px;box-shadow:0 1px 3px rgb(0 0 0/.3);
+      }
+      .logo-tool svg{width:.75rem;height:.75rem}
+      .logo-tool-primary{background:var(--primary);color:var(--primary-foreground)}
+      .logo-tool-danger{background:var(--destructive);color:var(--destructive-foreground)}
+      .theme-row{margin-top:.75rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+      .theme-row .theme-label{font-size:.75rem;color:var(--muted-foreground)}
+      .swatch{width:1.5rem;height:1.5rem;border-radius:9999px;border:2px solid #fff;box-shadow:0 1px 3px rgb(0 0 0/.3);padding:0;transition:transform .1s}
+      .swatch.active{border-color:var(--foreground);transform:scale(1.1)}
+      .theme-reset{font-size:.75rem;color:var(--muted-foreground);text-decoration:underline}
+      .theme-reset:hover{color:var(--foreground)}
+      .inv-title-block{text-align:right}
+      .inv-number-row{margin-top:.75rem;display:flex;align-items:center;justify-content:flex-end;gap:.5rem}
+      .inv-number-input{height:2.25rem;width:11rem;text-align:right}
+
+      .addr-grid{margin-top:2.5rem;display:grid;grid-template-columns:1fr;gap:1.5rem}
+      @media (min-width:768px){.addr-grid{grid-template-columns:repeat(3,1fr)}}
+      .field-label-row{margin-bottom:.5rem}
+      .meta-grid{margin-top:1.5rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+      @media (min-width:768px){.meta-grid{grid-template-columns:repeat(5,1fr)}}
+
+      /* ---------- items table ---------- */
+      .items-box{margin-top:2.5rem;overflow:hidden;border-radius:.75rem;border:1px solid var(--border)}
+      .items-head{
+        display:grid;grid-template-columns:repeat(12,1fr);gap:.5rem;
+        background:var(--primary);color:var(--primary-foreground);
+        padding:.75rem 1rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.025em;
+      }
+      .items-head .c-desc{grid-column:span 6}
+      .items-head .c-num{grid-column:span 2;text-align:right}
+      .item-row{
+        display:grid;grid-template-columns:repeat(12,1fr);gap:.5rem;align-items:center;
+        padding:.75rem 1rem;border-top:1px solid var(--border);
+      }
+      .item-row:first-child{border-top:none}
+      .item-row .c-desc{grid-column:span 6;min-width:0}
+      .item-row .c-num{grid-column:span 2;min-width:0}
+      .item-row .c-amt{grid-column:span 2;display:flex;align-items:center;justify-content:flex-end;gap:.5rem;min-width:0}
+      .item-row input{text-align:right;min-width:0}
+      .item-row .c-desc input{text-align:left}
+      @media (max-width:767px){
+        .items-head,.item-row{padding-left:.75rem;padding-right:.75rem;gap:.25rem}
+        .items-head .c-desc,.item-row .c-desc{grid-column:span 5}
+        .items-head .c-amt-h,.item-row .c-amt{grid-column:span 3}
+        .amt-text{font-size:.8125rem}
+        .item-row .c-amt{gap:.25rem}
+      }
+      .amt-text{font-size:.875rem;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+      .row-remove{
+        color:var(--muted-foreground);opacity:0;transition:opacity .15s,color .15s;
+        display:inline-flex;padding:.25rem;border-radius:.25rem;flex-shrink:0;
+      }
+      .item-row:hover .row-remove,.row-remove:focus-visible{opacity:1}
+      .row-remove:hover{color:var(--destructive)}
+      .row-remove svg{width:1rem;height:1rem}
+      @media (hover:none){.row-remove{opacity:.6}}
+      .add-item-bar{border-top:1px solid var(--border);background:color-mix(in srgb,var(--muted) 30%,transparent);padding:.5rem 1rem}
+      .add-item-btn{color:var(--primary);font-size:.875rem;font-weight:500;display:inline-flex;align-items:center;gap:.25rem;padding:.375rem .5rem;border-radius:.5rem;min-height:2.25rem}
+      .add-item-btn:hover{color:var(--primary);background:var(--muted)}
+      .add-item-btn svg{width:1rem;height:1rem}
+
+      /* ---------- bottom section ---------- */
+      .bottom-grid{margin-top:2rem;display:grid;grid-template-columns:1fr;gap:2rem}
+      @media (min-width:768px){.bottom-grid{grid-template-columns:1fr 1fr}}
+      .stack{display:flex;flex-direction:column;gap:1rem}
+      .totals{
+        display:flex;flex-direction:column;gap:.5rem;
+        border-radius:.75rem;background:color-mix(in srgb,var(--muted) 40%,transparent);padding:1.25rem;
+      }
+      .total-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:2rem}
+      .total-value{font-size:.875rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+      .total-value-lg{font-size:1.125rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+      .total-input{height:2rem;border-radius:.375rem;font-size:.875rem}
+      .w-24{width:6rem}.w-28{width:7rem}.w-32{width:8rem}
+      .text-right{text-align:right}.text-left{text-align:left}
+      .discount-input{flex:1;min-width:10rem;text-align:left}
+      @media (min-width:768px){.discount-input{min-width:14rem}}
+      .divider{height:1px;background:var(--border);margin:.5rem 0}
+      .balance-bar{
+        margin-top:.75rem;display:flex;align-items:center;justify-content:space-between;
+        border-radius:.5rem;background:var(--primary);color:var(--primary-foreground);padding:.75rem 1rem;
+      }
+      .balance-bar .bal-label{font-size:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.025em;color:var(--primary-foreground)}
+      .balance-bar .bal-value{font-size:1.125rem;font-weight:700;font-variant-numeric:tabular-nums}
+      .inner-card{margin-top:1rem;border-radius:.5rem;border:1px solid var(--border);background:var(--card);padding:1rem}
+      .inner-card.no-mt{margin-top:0}
+      .sched-grid{margin-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+      .sched-grid input{min-width:0}
+      .extra-payment{margin-top:1rem;border-top:1px solid var(--border);padding-top:.75rem}
+      .extra-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+      .extra-head .extra-title{font-size:.75rem;font-weight:600;text-transform:uppercase;color:var(--muted-foreground)}
+      .extra-remove{color:var(--muted-foreground);display:inline-flex;padding:.375rem;border-radius:.375rem}
+      .extra-remove:hover{color:var(--destructive);background:var(--muted)}
+      .extra-remove svg{width:1rem;height:1rem}
+      .bank-fields{margin-top:.5rem;display:flex;flex-direction:column;gap:.375rem;font-size:.875rem}
+      .bank-row{display:grid;grid-template-columns:1fr;gap:.5rem}
+      @media (min-width:640px){.bank-row{grid-template-columns:1fr 1fr}}
+      .bank-acct{display:flex;min-width:0;gap:.5rem}
+      .bank-acct input{min-width:0;text-align:left}
+      .stripe-wrap{margin-top:.75rem}
+      .pay-online{margin-top:.5rem}
+      .pay-online a{font-size:.875rem;font-weight:600;color:var(--primary);text-decoration:underline}
+
+      /* ---------- bank details (plain, left side, no card) ---------- */
+      .bank-plain{margin-top:.25rem}
+      .bank-plain .bank-lines{margin-top:.5rem;display:flex;flex-direction:column;gap:.375rem;font-size:.875rem}
+      .bank-line{display:flex;align-items:center;gap:.5rem;min-width:0}
+      .bank-line .bank-val{flex:1;min-width:0}
+      .bank-line input{text-align:left}
+      .bank-copy{
+        display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+        width:1.75rem;height:1.75rem;color:var(--muted-foreground);
+        border:none;background:transparent;box-shadow:none;padding:0;
+      }
+      .bank-copy:hover{color:var(--primary);background:transparent}
+      .bank-copy svg{width:.875rem;height:.875rem}
+      .bank-note-text{
+        display:block;width:100%;margin:0;padding:0 0 0 2.25rem;
+        font-size:.875rem;line-height:1.55;white-space:pre-wrap;overflow:visible;
+        border:none;background:transparent;box-shadow:none;outline:none;cursor:text;
+      }
+      .bank-note-text:focus{background:transparent;box-shadow:none;outline:none}
+      .bank-note-text:empty::before{content:attr(data-placeholder);color:var(--muted-foreground)}
+      .bank-acct-num{font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+
+      /* ---------- samples ---------- */
+      .samples{margin-top:2.5rem}
+      .samples h2{font-size:1.25rem;font-weight:700;letter-spacing:-.025em}
+      .samples .sub{font-size:.875rem;color:var(--muted-foreground);margin-top:.125rem}
+      .samples-grid{margin-top:1rem;display:grid;grid-template-columns:1fr;gap:1rem}
+      @media (min-width:768px){.samples-grid{grid-template-columns:1fr 1fr}}
+      .sample-card{display:flex;flex-direction:column;padding:1.25rem}
+      .sample-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.5rem}
+      .sample-head h3{font-size:1rem;font-weight:600}
+      .sample-head p{font-size:.75rem;color:var(--muted-foreground)}
+      .sample-badge{
+        border-radius:9999px;background:color-mix(in srgb,var(--primary) 10%,transparent);
+        color:var(--primary);padding:.25rem .5rem;font-size:10px;font-weight:600;
+        text-transform:uppercase;letter-spacing:.025em;text-align:center;flex-shrink:0;max-width:45%;
+      }
+      .sample-items{list-style:none;margin:.5rem 0 0;padding:0;font-size:.875rem}
+      .sample-items li{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-bottom:1px dashed color-mix(in srgb,var(--border) 60%,transparent);padding:.25rem 0}
+      .sample-items li:last-child{border-bottom:none}
+      .sample-items .d{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .sample-items .p{flex-shrink:0;font-variant-numeric:tabular-nums;color:var(--muted-foreground)}
+      .sample-subtotal{margin-top:.75rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.75rem}
+      .sample-subtotal .s-label{font-size:.875rem;color:var(--muted-foreground)}
+      .sample-subtotal .s-value{font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums}
+      .sample-btn{margin-top:1rem;width:100%}
+
+      /* ---------- saved view ---------- */
+      .saved-table{overflow:hidden}
+      .saved-head-row,.saved-row{
+        display:grid;grid-template-columns:repeat(12,1fr);gap:.5rem;align-items:center;padding:.75rem 1rem;
+      }
+      .saved-head-row{background:color-mix(in srgb,var(--muted) 40%,transparent);border-bottom:1px solid var(--border);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.025em;color:var(--muted-foreground)}
+      .saved-row{border-top:1px solid var(--border)}
+      .saved-row:first-of-type{border-top:none}
+      .sc-invoice{grid-column:span 5;min-width:0}
+      .sc-saved{grid-column:span 4;font-size:.875rem;color:var(--muted-foreground)}
+      .sc-total{grid-column:span 2;text-align:right;font-size:.875rem;font-variant-numeric:tabular-nums}
+      .sc-actions{grid-column:span 1;display:flex;justify-content:flex-end;gap:.25rem}
+      .saved-name{font-size:.875rem;font-weight:500;text-align:left;padding:0;min-height:0}
+      .saved-name:hover{text-decoration:underline}
+      .saved-num{font-size:.75rem;color:var(--muted-foreground)}
+      .saved-kept{font-size:11px;color:var(--muted-foreground)}
+      .saved-action{color:var(--muted-foreground);border-radius:.25rem;padding:.375rem;display:inline-flex}
+      .saved-action svg{width:1rem;height:1rem}
+      .saved-action:hover{color:var(--primary)}
+      .saved-action.danger:hover{color:var(--destructive)}
+      .empty-state{padding:3rem;text-align:center}
+      .empty-state svg{width:2.5rem;height:2.5rem;color:var(--muted-foreground);margin:0 auto .75rem}
+      .empty-state h2{font-size:1.125rem;font-weight:600}
+      .empty-state p{margin-top:.25rem;font-size:.875rem;color:var(--muted-foreground)}
+      @media (max-width:640px){
+        .saved-head-row{display:none}
+        .saved-row{grid-template-columns:1fr auto;grid-template-areas:"inv act" "saved act" "total act";row-gap:.125rem}
+        .sc-invoice{grid-area:inv}.sc-saved{grid-area:saved}.sc-total{grid-area:total;text-align:left;font-weight:600;color:var(--foreground)}
+        .sc-actions{grid-area:act}
+      }
+
+      /* ---------- toasts ---------- */
+      #toasts{
+        position:fixed;right:1rem;bottom:1rem;z-index:100;display:flex;flex-direction:column;gap:.5rem;
+        max-width:min(22rem,calc(100vw - 2rem));
+      }
+      .toast{
+        display:flex;align-items:center;gap:.5rem;background:var(--card);color:var(--foreground);
+        border:1px solid var(--border);border-radius:.5rem;box-shadow:0 4px 12px rgb(0 0 0/.15);
+        padding:.75rem 1rem;font-size:.875rem;animation:toast-in .2s ease-out;
+      }
+      .toast svg{width:1rem;height:1rem;flex-shrink:0}
+      .toast .t-ok{color:#16a34a}.toast .t-err{color:var(--destructive)}
+      .spinner{
+        width:1rem;height:1rem;flex-shrink:0;border-radius:9999px;
+        border:2px solid var(--muted-foreground);border-top-color:transparent;animation:spin .7s linear infinite;
+      }
+      .btn .spinner{width:1rem;height:1rem;border-color:currentColor;border-top-color:transparent}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      @keyframes toast-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+      @media (prefers-reduced-motion: reduce){
+        .toast{animation:none}.spinner{animation-duration:1.6s}
+      }
+
+      /* ---------- PDF export mode (mirrors the original) ---------- */
+      #invoiceCard.exporting input,
+      #invoiceCard.exporting textarea,
+      #invoiceCard.exporting select{
+        box-shadow:none !important;resize:none !important;
+        background-color:transparent !important;border-color:transparent !important;
+      }
+      #invoiceCard.exporting .lbl:hover,#invoiceCard.exporting .lbl:focus{background:transparent;box-shadow:none}
+
+      /* ---------- print preview (in-page replacement for the print dialog) ---------- */
+      .print-bar{
+        display:none;align-items:center;justify-content:space-between;gap:1rem;
+        background:var(--card);border:1px solid var(--border);border-radius:.75rem;
+        box-shadow:0 1px 3px 0 rgb(0 0 0/.1);padding:.75rem 1rem;margin-bottom:1rem;font-size:.875rem;
+      }
+      .print-bar.open{display:flex}
+      body.print-preview .page-head,
+      body.print-preview .ai-card,
+      body.print-preview .samples{display:none}
+      body.print-preview #invoiceCard{border:0;box-shadow:none}
+
+      /* ---------- print (mirrors the original) ---------- */
+      @media print{
+        body{background:#fff}
+        .print-hidden{display:none !important}
+        .wrap,.wrap-narrow{max-width:none;padding:0}
+        #invoiceCard{border:0;box-shadow:none;border-radius:0}
+        .lbl:hover,.lbl:focus{background:transparent;box-shadow:none}
+        #toasts{display:none}
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ================= EDITOR VIEW ================= -->
+    <div id="editorView">
+      <div class="wrap">
+        <div id="printBar" class="print-bar print-hidden">
+          <span>Preview — the invoice below is exactly what prints. Use your browser's print command (Ctrl/Cmd + P) to print it or save it as a PDF.</span>
+          <button type="button" class="btn btn-primary btn-sm" id="exitPrintBtn">Back to editor</button>
+        </div>
+        <div class="page-head print-hidden">
+          <div>
+            <h1>Invoice Generator</h1>
+            <p class="sub">Create professional invoices in seconds</p>
+          </div>
+          <div class="head-actions">
+            <div class="currency-wrap">
+              <select id="currencySelect" class="select" aria-label="Currency"></select>
+            </div>
+            <button type="button" class="btn btn-outline" id="savedBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M2 10h20"/></svg>
+              Saved
+            </button>
+            <button type="button" class="btn btn-outline" id="saveBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+              Save
+            </button>
+            <button type="button" class="btn btn-outline" id="printBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+              Preview
+            </button>
+            <button type="button" class="btn btn-primary" id="pdfBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="card ai-card print-hidden">
+          <div class="ai-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            <h2>AI Invoice Maker</h2>
+            <span>Paste a proposal, pricing list or notes — it fills the invoice below. Contract timeline defaults to 60 days and the due date is set 60 days out; both stay editable on the invoice. Just a name and a package (e.g. “Ahmed — Business Catalyst”) is enough — Description and Notes are personalised for that person.</span>
+          </div>
+          <textarea id="aiText" class="textarea" rows="4" placeholder="e.g. Client: Mark from Keystone Concrete
+Product Name: Sales System
+Rate: $3000
+Contract timeline: 60 days
+10 jobs guaranteed in 60 days
+
+Or just: Ahmed — Business Catalyst package"></textarea>
+          <div class="ai-actions">
+            <button type="button" class="btn btn-primary" id="generateBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+              Generate invoice
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= INVOICE ================= -->
+        <div class="card invoice-card" id="invoiceCard">
+          <div class="inv-top">
+            <div style="flex:1">
+              <div id="logoArea"></div>
+              <div class="theme-row print-hidden" id="themeRow" style="display:none">
+                <span class="theme-label">Theme:</span>
+                <span id="themeSwatches" style="display:inline-flex;gap:.5rem"></span>
+                <button type="button" class="theme-reset" id="themeReset" style="display:none">Reset</button>
+              </div>
+            </div>
+            <div class="inv-title-block">
+              <span class="lbl lbl-title" contenteditable="true" data-label="title">INVOICE</span>
+              <div class="inv-number-row" data-export="invoiceNumber">
+                <span class="lbl lbl-prefix" contenteditable="true" data-label="numberPrefix">#</span>
+                <input class="input inv-number-input" id="invoiceNumber" value="" aria-label="Invoice number" />
+              </div>
+            </div>
+          </div>
+
+          <div class="addr-grid">
+            <div data-export="from">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="from">From</span></div>
+              <textarea class="textarea no-resize" rows="4" data-field="from" placeholder="Your business name
+Email
+Address"></textarea>
+            </div>
+            <div data-export="billTo">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="billTo">Bill To</span></div>
+              <textarea class="textarea no-resize" rows="4" data-field="billTo" placeholder="Client name
+Email
+Address"></textarea>
+            </div>
+            <div data-export="shipTo">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="shipTo">Ship To</span></div>
+              <textarea class="textarea no-resize" rows="4" data-field="shipTo" placeholder="Shipping address"></textarea>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div data-export="date">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="date">Date</span></div>
+              <input type="date" class="input" data-field="date" />
+            </div>
+            <div data-export="timeline">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="timeline">Contract Timeline</span></div>
+              <input class="input" data-field="timeline" placeholder="60 Days" />
+            </div>
+            <div data-export="paymentTerms">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="paymentTerms">Payment Terms</span></div>
+              <input class="input" data-field="paymentTerms" placeholder="Net 30" />
+            </div>
+            <div data-export="dueDate">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="dueDate">Due Date</span></div>
+              <input type="date" class="input" data-field="dueDate" />
+            </div>
+            <div data-export="poNumber">
+              <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="poNumber">Product Name</span></div>
+              <input class="input" data-field="poNumber" placeholder="—" />
+            </div>
+          </div>
+
+          <div class="items-box">
+            <div class="items-head">
+              <div class="c-desc"><span class="lbl lbl-on-primary" contenteditable="true" data-label="itemDescription">Item Description</span></div>
+              <div class="c-num"><span class="lbl lbl-on-primary" contenteditable="true" data-label="quantity">Qty</span></div>
+              <div class="c-num"><span class="lbl lbl-on-primary" contenteditable="true" data-label="rate">Rate</span></div>
+              <div class="c-num c-amt-h"><span class="lbl lbl-on-primary" contenteditable="true" data-label="amount">Amount</span></div>
+            </div>
+            <div id="itemsBody"></div>
+            <div class="add-item-bar print-hidden">
+              <button type="button" class="add-item-btn" id="addItemBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Add Line Item
+              </button>
+            </div>
+          </div>
+
+          <div class="bottom-grid">
+            <div class="stack">
+              <div data-export="notes">
+                <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="notes">Description</span></div>
+                <textarea class="textarea" rows="3" data-field="notes"></textarea>
+              </div>
+              <div data-export="terms">
+                <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="terms">Notes</span></div>
+                <textarea class="textarea" rows="3" id="termsField"></textarea>
+              </div>
+              <div class="bank-plain" data-export="bank">
+                <div class="field-label-row"><span class="lbl lbl-xs" contenteditable="true" data-label="bankDetails">Bank Account Details</span></div>
+                <div class="bank-lines">
+                  <div class="bank-line">
+                    <button type="button" class="bank-copy print-hidden" data-copy-field="bankName" aria-label="Copy bank name" title="Copy bank name"></button>
+                    <span class="bank-val"><input class="input bare-input" data-field="bankName" placeholder="Bank name" aria-label="Bank name" /></span>
+                  </div>
+                  <div class="bank-line">
+                    <button type="button" class="bank-copy print-hidden" data-copy-field="bankTitle" aria-label="Copy account title name" title="Copy title name"></button>
+                    <span class="bank-val"><input class="input bare-input" data-field="bankTitle" placeholder="Title name" aria-label="Bank account title" /></span>
+                  </div>
+                  <div class="bank-line">
+                    <button type="button" class="bank-copy print-hidden" id="copyAcctBtn" data-copy-field="bankAccount" aria-label="Copy bank account number" title="Copy account number"></button>
+                    <span class="bank-val bank-acct-num"><input class="input bare-input bank-acct-num" data-field="bankAccount" placeholder="Account number" aria-label="Bank account number" readonly /></span>
+                  </div>
+                  <p class="bank-note-text" data-field="bankNote" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bank payment note" data-placeholder="Payment note"></p>
+                </div>
+                <div class="stripe-wrap print-hidden" data-export="stripeInput">
+                  <input class="input" data-field="stripeLink" placeholder="Stripe payment link (paste it here later)" aria-label="Stripe payment link" style="border-radius:.375rem" />
+                </div>
+                <div class="pay-online" data-export="stripe" id="stripeLinkWrap" style="display:none">
+                  <a href="#" target="_blank" rel="noreferrer" id="stripeLinkOut">Pay Online</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="totals">
+              <div class="total-row">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="subtotal">Subtotal</span>
+                <span class="total-value" id="subtotalOut">$0.00</span>
+              </div>
+              <div class="total-row" data-export="tax">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="tax">Tax (%)</span>
+                <input class="input total-input w-24 text-right" data-field="taxRate" placeholder="—" />
+              </div>
+              <div class="total-row" data-export="discount">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="discount">Discount</span>
+                <input class="input total-input discount-input" data-field="discount" placeholder="—" />
+              </div>
+              <div class="total-row" data-export="shipping">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="shipping">Shipping</span>
+                <input class="input total-input w-28 text-right" data-field="shipping" placeholder="—" />
+              </div>
+              <div class="divider"></div>
+              <div class="total-row">
+                <span class="lbl lbl-sm-bold" contenteditable="true" data-label="total">Total</span>
+                <span class="total-value-lg" id="totalOut">$0.00</span>
+              </div>
+              <div class="total-row" data-export="totalInPkr">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="totalInPkr">Total In PKR</span>
+                <input class="input total-input w-32 text-right" data-field="totalInPkr" placeholder="—" />
+              </div>
+              <div class="total-row" data-export="amountPaid">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="amountPaid">Amount Paid</span>
+                <input class="input total-input w-28 text-right" data-field="amountPaid" placeholder="—" />
+              </div>
+              <div class="balance-bar">
+                <span class="lbl bal-label" contenteditable="true" data-label="balanceDue">Balance Due</span>
+                <span class="bal-value" id="balanceOut">$0.00</span>
+              </div>
+              <div class="total-row" data-export="toBePaidToday">
+                <span class="lbl lbl-sm" contenteditable="true" data-label="toBePaidToday">To Be Paid Today</span>
+                <input class="input total-input text-right" style="flex:1;min-width:0" data-field="toBePaidToday" placeholder="—" aria-label="To Be Paid Today" />
+              </div>
+
+              <div class="inner-card" data-export="scheduled">
+                <span class="lbl lbl-xs" contenteditable="true" data-label="scheduledPayment">Scheduled Payment</span>
+                <div class="sched-grid">
+                  <input class="input text-right" data-field="scheduledPayment" placeholder="Amount" aria-label="Scheduled payment 1 amount" />
+                  <input class="input" data-field="scheduledDate" placeholder="Date or payment terms" aria-label="Scheduled payment 1 date" />
+                </div>
+              </div>
+
+              <div id="extraPayments"></div>
+
+              <div class="print-hidden" data-export="addPayment">
+                <button type="button" class="btn btn-ghost btn-sm" id="addPaymentBtn" style="padding-left:.5rem">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  Add Scheduled Payment
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SAMPLES ================= -->
+        <div class="samples print-hidden">
+          <h2>Sample Invoices</h2>
+          <p class="sub">Pre-built Appoint Funnels and Agenticmyze consulting invoices — including the Quick-Start and Business-Catalyst personalised plans. Click "Use this sample" to load one straight into the editor above.</p>
+          <div class="samples-grid" id="samplesGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SAVED VIEW ================= -->
+    <div id="savedView" style="display:none">
+      <div class="wrap-narrow">
+        <div class="page-head">
+          <div>
+            <h1>Saved Invoices</h1>
+            <p class="sub">Invoices you've downloaded as PDF — open and edit any of them.</p>
+          </div>
+          <button type="button" class="btn btn-outline" id="backBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            Back to editor
+          </button>
+        </div>
+        <div id="savedContent"></div>
+      </div>
+    </div>
+
+    <div id="toasts" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+    <script>
+    (function(){
+      'use strict';
+      var el=function(id){return document.getElementById(id);};
+      var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+      var uidC=0;
+      var nid=function(){return 'id-'+(++uidC)+'-'+Math.random().toString(36).slice(2,8);};
+
+      /* ---------------- constants (from the original app) ---------------- */
+      var CURRENCIES=[
+        {code:'USD',symbol:'$',label:'USD ($)'},
+        {code:'PKR',symbol:'₨',label:'PKR (₨)'},
+        {code:'EUR',symbol:'€',label:'EUR (€)'},
+        {code:'GBP',symbol:'£',label:'GBP (£)'}
+      ];
+      var DEFAULT_FROM='Ziauddin Shah | AppointFunnels';
+      var DEFAULT_BANK_NOTE='Kindly share a screenshot after transferring the funds so I can verify the payment. Once the payment is completed, kindly share the payment receipt for confirmation so that we can onboard you in our system.';
+      var DEFAULT_TERMS="{{firstName}} Thanks For Choosing Appoint Funnels. We're excited to get your pipeline running.";
+      var DEFAULT_TIMELINE='60 Days';
+      var AGENTIC_NOTES='Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days.';
+      /* Consulting packages (Agenticmyze): personalised Description + Notes per package. */
+      var PACKAGES={
+        quickstart:{name:'Quick-Start',product:'Quick-Start Package',
+          description:'Quick-Start consulting package — complete AI automation business setup, from niche selection and offer making to client acquisition and closing, designed to land your first client in 60 days. Covers consultation, offer creation and client hunting, with a weekly call overview with the company director. 1 client guaranteed.',
+          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Quick-Start package guarantees your first client within the 60-day contract timeline — we work with you on niche, offer making, client hunting and closing until you are booked and closing.'},
+        businesscatalyst:{name:'Business-Catalyst',product:'Business-Catalyst Package',
+          description:'Business-Catalyst consulting package — complete AI automation business setup, from niche selection and offer making to client acquisition and closing, designed to land your first 2 clients in 60 days. Includes Claude Code operating systems, 50+ sales call recordings to learn from, and weekly sales call reviews. 2 clients guaranteed.',
+          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Business-Catalyst package guarantees 2 clients within the 60-day contract timeline — offer making, client acquisition systems and closing support are all covered, and this is the plan that can be paid in monthly installments.'},
+        elite:{name:'Elite',product:'Elite Package',
+          description:'Elite package — a personalised consulting plan covering niche, offer making, client acquisition and closing, tailored to your business and designed to get you booked appointments and land clients within the 60-day contract timeline.',
+          notes:'{{firstName}} Thanks for choosing us. Your Elite package is personalised to your business — offer making, client acquisition and closing are all covered across the 60-day contract timeline.'},
+        personalised:{name:'Personalised Plan',product:'Personalised Plan',
+          description:'Personalised plan built around your business — niche selection, offer making, client acquisition and closing, tailored to your goals and designed to get you booked appointments and land clients within the 60-day contract timeline.',
+          notes:'{{firstName}} Thanks for choosing us. This plan is personalised for you — we build around your niche and offer, and work on acquisition and closing with you across the 60-day contract timeline.'}
+      };
+      function detectPackage(s){
+        var t=String(s||'').toLowerCase().replace(/[\s_]+/g,'-');
+        if(/business[-\s]?catalyst/.test(t))return 'businesscatalyst';
+        if(/quick[-\s]?start/.test(t))return 'quickstart';
+        if(/personali[sz]ed/.test(t)||/personali[sz]e/.test(t))return 'personalised';
+        if(/\belite\b/.test(t))return 'elite';
+        return '';
+      }
+      function notesFor(ch){return 'Complete cold '+(ch==='sms'?'sms':'emails')+' outreach infrastructure setup designed to reach decision-makers directly and book meetings and close clients.';}
+      var DEFAULT_LABELS={title:'INVOICE',numberPrefix:'#',from:'From',billTo:'Bill To',shipTo:'Ship To',date:'Date',timeline:'Contract Timeline',paymentTerms:'Payment Terms',dueDate:'Due Date',poNumber:'Product Name',itemDescription:'Item Description',quantity:'Qty',rate:'Rate',amount:'Amount',notes:'Description',terms:'Notes',subtotal:'Subtotal',tax:'Tax (%)',discount:'Discount',shipping:'Shipping',total:'Total',amountPaid:'Amount Paid',totalInPkr:'Total In PKR',balanceDue:'Balance Due',scheduledPayment:'Scheduled Payment',scheduledDate:'Scheduled Date',toBePaidToday:'To Be Paid Today',bankDetails:'Bank Account Details',payOnline:'Pay Online'};
+
+      var SAMPLES=[
+        {id:'website-design',title:'Website Design',tagline:'Conversion-focused website build for a client brand.',product:'Website Design & Development',timeline:'21',items:[{description:'UI/UX design (up to 6 pages)',quantity:'1',rate:'450'},{description:'Responsive front-end development',quantity:'1',rate:'550'},{description:'CMS integration (Webflow / WordPress)',quantity:'1',rate:'250'},{description:'On-page SEO setup',quantity:'1',rate:'120'},{description:'1 month of post-launch support',quantity:'1',rate:'80'}],amountPaid:700,scheduledPayment:750},
+        {id:'sales-system',title:'Sales System',tagline:'End-to-end outbound + CRM setup, modeled on our Cold Emailing System.',product:'AI Sales System',timeline:'30',items:[{description:'Mailboxes Cost (20 @ $3.50)',quantity:'1',rate:'70'},{description:'Leads Cost ($50 / 10k)',quantity:'1',rate:'90'},{description:'Instantly Plan (Split)',quantity:'1',rate:'48.50'},{description:'Email Verification',quantity:'1',rate:'50'},{description:'Personalization Credits',quantity:'1',rate:'10'}],amountPaid:268.5,scheduledPayment:0},
+        {id:'appointrium-academy',title:'Appointrium Academy',tagline:'Elite plan for Appointrium Academy clients.',product:'Elite Plan',timeline:'60',currency:'PKR',date:'2026-08-01',paymentTerms:'60 Days',billTo:'Musab Ali',items:[{description:'Appointrium Elite Package',quantity:'1',rate:'12000'}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.elite.description,terms:PACKAGES.elite.notes},
+        {id:'agenticmyze-quickstart',title:'Agenticmyze Quick-Start',tagline:'Consulting starter package — 1 client guaranteed in 60 days.',product:'Quick-Start Package',timeline:'60',currency:'PKR',billTo:'Ahmed',items:[{description:'Quick-Start Package — AI automation business setup (1 client guaranteed)',quantity:'1',rate:''}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.quickstart.description,terms:PACKAGES.quickstart.notes},
+        {id:'agenticmyze-business-catalyst',title:'Agenticmyze Business-Catalyst',tagline:'Consulting growth package — 2 clients guaranteed in 60 days.',product:'Business-Catalyst Package',timeline:'60',currency:'PKR',billTo:'Ahmed',items:[{description:'Business-Catalyst Package — AI automation business setup (2 clients guaranteed)',quantity:'1',rate:''}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.businesscatalyst.description,terms:PACKAGES.businesscatalyst.notes},
+        {id:'ai-cold-sms-system',title:'AI Cold SMS System',tagline:'Cold SMS outreach infrastructure — numbers, leads, platform and AI personalization.',product:'AI Cold SMS System',timeline:'30',items:[{description:'Dedicated SMS Numbers (10 @ $4.50)',quantity:'1',rate:'45'},{description:'Leads Cost ($50 / 10k)',quantity:'1',rate:'90'},{description:'SMS Platform Plan (Split)',quantity:'1',rate:'65'},{description:'Number Verification & Carrier Lookup',quantity:'1',rate:'40'},{description:'AI Personalization Credits',quantity:'1',rate:'15'}],amountPaid:255,scheduledPayment:0}
+      ];
+
+      /* ---------------- helpers (ported from the original) ---------------- */
+      function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+      function todayStr(){return fmtDate(new Date());}
+      function num(v){var m=String(v==null?'':v).match(/-?\d+(\.\d+)?/);return m?Number(m[0]):0;}
+      function cur(){for(var i=0;i<CURRENCIES.length;i++)if(CURRENCIES[i].code===inv.currency)return CURRENCIES[i];return CURRENCIES[0];}
+      function fmt(n){return cur().symbol+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+      function parseTimeline(e){
+        var t=String(e||'').match(/\b(?:contract|project)\s+(?:timeline|duration|term|length)\s*(?::|=|is|of|-)?\s*(\d+\s*(?:days?|weeks?|months?))\b/i)
+          ||String(e||'').match(/\b(?:timeline|contract period|project period)\s*(?::|=|is|of|-)?\s*(\d+\s*(?:days?|weeks?|months?))\b/i)
+          ||String(e||'').match(/\b(\d+\s*(?:days?|weeks?|months?))\s+(?:contract|project)\b/i);
+        return t?t[1].replace(/\s+/,' ').replace(/\b(days?|weeks?|months?)\b/i,function(n){return n[0].toUpperCase()+n.slice(1).toLowerCase();}):'';
+      }
+      function dueFromTimeline(e,base){
+        var s=String(e||'');
+        var t=s.match(/(\d+)\s*(day|days|week|weeks|month|months)/i)||s.trim().match(/^(\d+)$/);
+        if(!t)return '';
+        var n=parseInt(t[1],10);if(!n)return '';
+        var r=(t[2]||'days').toLowerCase();
+        var a=r.indexOf('week')===0?n*7:r.indexOf('month')===0?n*30:n;
+        var d=base?new Date(base+'T00:00:00'):new Date();
+        if(isNaN(d.getTime()))d=new Date();
+        d.setDate(d.getDate()+a);return fmtDate(d);
+      }
+      function detectChannel(s){return /\b(sms|text message|texting|whatsapp)\b/i.test(s||'')?'sms':'email';}
+      function isAgentic(s){return /\b(?:agenticmyze|agentizmyze)\b/i.test(s||'');}
+      function brandSwap(s){return String(s||'').replace(/appoint\s*funnels/gi,'Agenticmyze');}
+      function firstLine(s){var parts=String(s||'').split(/\r?\n/).map(function(x){return x.trim();}).filter(function(x){return x.length>0;});return parts.length?parts[0]:'';}
+      function firstName(){var fl=firstLine(inv.billTo);var w=fl.split(/\s+/).filter(Boolean);return w.length?w[0]:'';}
+      function displayTerms(){var te=firstName();return te?inv.terms.replace(/\{\{\s*firstName\s*\}\}/gi,te):inv.terms;}
+      function hasText(v){return String(v==null?'':v).trim().length>0;}
+
+      /* ---------------- state ---------------- */
+      function newItem(){return{id:nid(),description:'',quantity:'',rate:''};}
+      function defaultInvoice(){
+        return{
+          logo:null,logoPalette:[],themeColor:null,
+          invoiceNumber:'INV-'+String(Date.now()).slice(-6),
+          savedId:nid(),
+          from:DEFAULT_FROM,billTo:'',shipTo:'',
+          date:todayStr(),timeline:DEFAULT_TIMELINE,paymentTerms:'',dueDate:dueFromTimeline(DEFAULT_TIMELINE,todayStr()),poNumber:'',
+          items:[newItem()],
+          taxRate:'',discount:'',shipping:'',amountPaid:'',totalInPkr:'',
+          scheduledPayment:'',scheduledDate:'',additionalPayments:[],toBePaidToday:'',
+          brand:'appointfunnels',
+          bankName:'United Bank Limited',bankTitle:'Zia UD Din Shah Gilani',bankAccount:'1373369728458',bankNote:DEFAULT_BANK_NOTE,
+          stripeLink:'',channel:'email',
+          notes:notesFor('email'),terms:DEFAULT_TERMS,
+          currency:'USD',labels:Object.assign({},DEFAULT_LABELS)
+        };
+      }
+      var inv=defaultInvoice();
+      var savedList=[]; /* saved invoices live in memory for this session */
+      var aiText='';
+      var generating=false;
+
+      /* ---------------- icons ---------------- */
+      var X_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+      var UPLOAD_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+      var PENCIL_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>';
+      var CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      var COPY_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      var SPARKLE_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>';
+
+      /* ---------------- toasts ---------------- */
+      var toastTimers={};
+      function showToast(type,msg,id){
+        var key=id||('t'+Date.now()+'-'+Math.random().toString(36).slice(2,6));
+        var t=document.querySelector('[data-toast="'+key+'"]');
+        if(!t){t=document.createElement('div');t.className='toast';t.setAttribute('data-toast',key);el('toasts').appendChild(t);}
+        var icon;
+        if(type==='loading'){icon='<span class="spinner"></span>';}
+        else if(type==='success'){icon='<svg class="t-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';}
+        else{icon='<svg class="t-err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>';}
+        t.innerHTML=icon;
+        var span=document.createElement('span');span.textContent=msg;t.appendChild(span);
+        if(toastTimers[key])clearTimeout(toastTimers[key]);
+        if(type!=='loading'){toastTimers[key]=setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},3600);}
+      }
+      function toastSuccess(m,id){showToast('success',m,id);}
+      function toastError(m,id){showToast('error',m,id);}
+      function toastLoading(m,id){showToast('loading',m,id);}
+
+      /* ---------------- totals ---------------- */
+      function totals(){
+        var sub=inv.items.reduce(function(s,it){return s+num(it.rate);},0);
+        var total=sub+sub*(num(inv.taxRate)/100)-num(inv.discount)+num(inv.shipping);
+        return{sub:sub,total:total,balance:total-num(inv.amountPaid)};
+      }
+      function recalc(){
+        inv.items.forEach(function(it){
+          var s=document.querySelector('[data-amt="'+it.id+'"]');
+          if(s)s.textContent=fmt(num(it.rate));
+        });
+        var t=totals();
+        el('subtotalOut').textContent=fmt(t.sub);
+        el('totalOut').textContent=fmt(t.total);
+        el('balanceOut').textContent=fmt(t.balance);
+      }
+
+      /* ---------------- items ---------------- */
+      function buildItems(){
+        var body=el('itemsBody');body.innerHTML='';
+        inv.items.forEach(function(item,idx){
+          var row=document.createElement('div');row.className='item-row';row.setAttribute('data-item-index',idx);
+          var cd=document.createElement('div');cd.className='c-desc';
+          var di=document.createElement('input');di.className='input bare-input';di.placeholder='Description of service or product';di.value=item.description;di.setAttribute('aria-label','Item description');
+          di.addEventListener('input',function(){item.description=di.value;checkBrand();});
+          cd.appendChild(di);
+          var cq=document.createElement('div');cq.className='c-num';
+          var qi=document.createElement('input');qi.className='input bare-input text-right';qi.placeholder='1';qi.value=item.quantity;qi.setAttribute('aria-label','Quantity');
+          qi.addEventListener('input',function(){item.quantity=qi.value;});
+          cq.appendChild(qi);
+          var cr=document.createElement('div');cr.className='c-num';
+          var ri=document.createElement('input');ri.className='input bare-input text-right';ri.placeholder='0.00';ri.value=item.rate;ri.setAttribute('aria-label','Rate');
+          ri.addEventListener('input',function(){item.rate=ri.value;recalc();});
+          cr.appendChild(ri);
+          var ca=document.createElement('div');ca.className='c-amt';
+          var amt=document.createElement('span');amt.className='amt-text';amt.setAttribute('data-amt',item.id);
+          var rm=document.createElement('button');rm.type='button';rm.className='row-remove print-hidden';rm.setAttribute('aria-label','Remove');rm.innerHTML=X_SVG;
+          rm.addEventListener('click',function(){
+            if(inv.items.length>1){inv.items=inv.items.filter(function(i){return i.id!==item.id;});buildItems();recalc();}
+          });
+          ca.appendChild(amt);ca.appendChild(rm);
+          row.appendChild(cd);row.appendChild(cq);row.appendChild(cr);row.appendChild(ca);
+          body.appendChild(row);
+        });
+        recalc();
+      }
+      el('addItemBtn').addEventListener('click',function(){
+        inv.items.push(newItem());buildItems();
+        var rows=el('itemsBody').querySelectorAll('.item-row');
+        var last=rows[rows.length-1];if(last){var inp=last.querySelector('input');if(inp)inp.focus();}
+      });
+
+      /* ---------------- additional scheduled payments ---------------- */
+      function buildExtras(){
+        var wrap=el('extraPayments');wrap.innerHTML='';
+        inv.additionalPayments.forEach(function(p,i){
+          var box=document.createElement('div');box.className='extra-payment';box.setAttribute('data-payment-id',p.id);
+          var head=document.createElement('div');head.className='extra-head';
+          var title=document.createElement('span');title.className='extra-title';title.textContent=inv.labels.scheduledPayment+' '+(i+2);
+          var rm=document.createElement('button');rm.type='button';rm.className='extra-remove print-hidden';rm.setAttribute('aria-label','Remove scheduled payment '+(i+2));rm.title='Remove payment';rm.innerHTML=X_SVG;
+          rm.addEventListener('click',function(){
+            inv.additionalPayments=inv.additionalPayments.filter(function(x){return x.id!==p.id;});buildExtras();
+          });
+          head.appendChild(title);head.appendChild(rm);
+          var grid=document.createElement('div');grid.className='sched-grid';
+          var ai=document.createElement('input');ai.className='input text-right';ai.placeholder='Amount';ai.value=p.amount;ai.setAttribute('aria-label','Scheduled payment '+(i+2)+' amount');
+          ai.addEventListener('input',function(){p.amount=ai.value;});
+          var di=document.createElement('input');di.className='input';di.placeholder='Date or payment terms';di.value=p.date;di.setAttribute('aria-label','Scheduled payment '+(i+2)+' date');
+          di.addEventListener('input',function(){p.date=di.value;});
+          grid.appendChild(ai);grid.appendChild(di);
+          box.appendChild(head);box.appendChild(grid);
+          wrap.appendChild(box);
+        });
+      }
+      el('addPaymentBtn').addEventListener('click',function(){
+        inv.additionalPayments.push({id:nid(),amount:'',date:''});buildExtras();
+      });
+
+      /* ---------------- labels ---------------- */
+      function syncLabels(){
+        document.querySelectorAll('[data-label]').forEach(function(elm){
+          var v=inv.labels[elm.getAttribute('data-label')];
+          if(v!=null&&elm.textContent!==v)elm.textContent=v;
+        });
+        buildExtras();
+      }
+      document.querySelectorAll('[data-label]').forEach(function(elm){
+        var key=elm.getAttribute('data-label');
+        elm.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();elm.blur();}});
+        elm.addEventListener('paste',function(e){
+          e.preventDefault();
+          var t=(e.clipboardData||window.clipboardData).getData('text');
+          document.execCommand('insertText',false,t);
+        });
+        elm.addEventListener('blur',function(){
+          inv.labels[key]=elm.textContent.trim();
+          if(key==='scheduledPayment')buildExtras();
+          if(key==='payOnline')renderStripeLink();
+        });
+      });
+
+      /* ---------------- fields ---------------- */
+      function setFieldValue(field,val){
+        var elm=document.querySelector('[data-field="'+field+'"]');
+        if(!elm)return;
+        if(elm.tagName==='INPUT'||elm.tagName==='TEXTAREA'||elm.tagName==='SELECT'){elm.value=val==null?'':val;}
+        else if(document.activeElement!==elm){elm.textContent=val==null?'':val;}
+      }
+      document.querySelectorAll('[data-field]').forEach(function(elm){
+        var f=elm.getAttribute('data-field');
+        elm.addEventListener('input',function(){
+          var val=(elm.tagName==='INPUT'||elm.tagName==='TEXTAREA'||elm.tagName==='SELECT')?elm.value:elm.textContent;
+          inv[f]=val;
+          if(f==='timeline'){inv.dueDate=dueFromTimeline(val,inv.date);setFieldValue('dueDate',inv.dueDate);}
+          if(f==='date'){var nd=dueFromTimeline(inv.timeline,val);if(nd){inv.dueDate=nd;setFieldValue('dueDate',nd);}}
+          if(f==='billTo')refreshTermsDisplay();
+          if(f==='stripeLink')renderStripeLink();
+          if(f==='from'||f==='poNumber'||f==='notes')checkBrand();
+          recalc();
+        });
+      });
+      var bankNoteEl=document.querySelector('[data-field="bankNote"]');
+      if(bankNoteEl){
+        bankNoteEl.addEventListener('paste',function(e){
+          e.preventDefault();
+          var t=(e.clipboardData||window.clipboardData).getData('text');
+          document.execCommand('insertText',false,t);
+        });
+      }
+      el('invoiceNumber').addEventListener('input',function(){inv.invoiceNumber=this.value;});
+      var termsField=el('termsField');
+      termsField.addEventListener('input',function(){inv.terms=termsField.value;checkBrand();});
+      function refreshTermsDisplay(){
+        if(document.activeElement!==termsField)termsField.value=displayTerms();
+      }
+      function renderStripeLink(){
+        var wrap=el('stripeLinkWrap'),a=el('stripeLinkOut');
+        if(inv.stripeLink.trim()!==''){wrap.style.display='';a.href=inv.stripeLink.trim();a.textContent=inv.labels.payOnline||'Pay Online';}
+        else{wrap.style.display='none';}
+      }
+
+      /* ---------------- currency ---------------- */
+      var currencySelect=el('currencySelect');
+      CURRENCIES.forEach(function(c){
+        var o=document.createElement('option');o.value=c.code;o.textContent=c.label;currencySelect.appendChild(o);
+      });
+      currencySelect.addEventListener('change',function(){inv.currency=this.value;recalc();});
+
+      /* ---------------- logo + theme palette ---------------- */
+      function rgbHex(r,g,b){function h(x){return x.toString(16).padStart(2,'0');}return '#'+h(r)+h(g)+h(b);}
+      function colorDist(a,b){
+        function p(x){var m=x.replace('#','').match(/.{2}/g);return m?m.map(function(v){return parseInt(v,16);}):[0,0,0];}
+        var n=p(a),r=p(b);
+        return Math.sqrt(Math.pow(n[0]-r[0],2)+Math.pow(n[1]-r[1],2)+Math.pow(n[2]-r[2],2));
+      }
+      function extractPalette(ctx,w,h){
+        function pass(opts){
+          try{
+            var data=ctx.getImageData(0,0,w,h).data;
+            var map=new Map();
+            for(var g=0;g<data.length;g+=16){
+              var r=data[g],gg=data[g+1],b=data[g+2];
+              if(data[g+3]<200)continue;
+              var mx=Math.max(r,gg,b),mn=Math.min(r,gg,b);
+              if(opts.skipNearWhite&&mx>240&&mn>240)continue;
+              if(opts.skipNearBlack&&mx<25)continue;
+              if(opts.requireSaturation&&mx-mn<20)continue;
+              var key=(r>>5)+'-'+(gg>>5)+'-'+(b>>5);
+              var f=map.get(key);
+              if(f){f.r+=r;f.g+=gg;f.b+=b;f.n+=1;}else{map.set(key,{r:r,g:gg,b:b,n:1});}
+            }
+            var sorted=Array.from(map.values()).sort(function(a,b2){return b2.n-a.n;});
+            var out=[];
+            for(var i=0;i<sorted.length;i++){
+              var f2=sorted[i];
+              var hex=rgbHex(Math.round(f2.r/f2.n),Math.round(f2.g/f2.n),Math.round(f2.b/f2.n));
+              var ok=true;
+              for(var j=0;j<out.length;j++){if(colorDist(out[j],hex)<=60){ok=false;break;}}
+              if(ok)out.push(hex);
+              if(out.length>=5)break;
+            }
+            return out;
+          }catch(e){return [];}
+        }
+        var a=pass({requireSaturation:true,skipNearWhite:true,skipNearBlack:true});
+        if(!a.length)a=pass({requireSaturation:false,skipNearWhite:true,skipNearBlack:true});
+        if(!a.length)a=pass({requireSaturation:false,skipNearWhite:true,skipNearBlack:false});
+        return a;
+      }
+      function luminanceForeground(hex){
+        var m=String(hex).replace('#','').match(/.{2}/g);
+        if(!m)return '#ffffff';
+        var n=m.map(function(v){return parseInt(v,16);});
+        return (0.299*n[0]+0.587*n[1]+0.114*n[2])/255>0.6?'#111111':'#ffffff';
+      }
+      function applyTheme(){
+        var root=document.documentElement;
+        var props=['--primary','--accent','--primary-foreground','--accent-foreground'];
+        if(inv.themeColor){
+          root.style.setProperty('--primary',inv.themeColor);
+          root.style.setProperty('--accent',inv.themeColor);
+          var fg=luminanceForeground(inv.themeColor);
+          root.style.setProperty('--primary-foreground',fg);
+          root.style.setProperty('--accent-foreground',fg);
+        }else{
+          props.forEach(function(p){root.style.removeProperty(p);});
+        }
+        renderThemeRow();
+      }
+      function renderThemeRow(){
+        var row=el('themeRow'),sw=el('themeSwatches'),reset=el('themeReset');
+        if(!inv.logo||!inv.logoPalette||!inv.logoPalette.length){row.style.display='none';return;}
+        row.style.display='flex';sw.innerHTML='';
+        inv.logoPalette.forEach(function(color){
+          var b=document.createElement('button');b.type='button';b.className='swatch'+(inv.themeColor===color?' active':'');
+          b.style.backgroundColor=color;b.title='Use '+color;b.setAttribute('aria-label','Use color '+color);
+          b.addEventListener('click',function(){inv.themeColor=color;applyTheme();});
+          sw.appendChild(b);
+        });
+        reset.style.display=inv.themeColor?'':'none';
+      }
+      el('themeReset').addEventListener('click',function(){inv.themeColor=null;applyTheme();});
+      function handleLogoFile(file){
+        var reader=new FileReader();
+        reader.onload=function(){
+          var dataUrl=reader.result;
+          var img=new Image();
+          img.onload=function(){
+            var scale=Math.min(1,480/img.width,240/img.height);
+            var w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+            var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+            var ctx=canvas.getContext('2d');
+            if(!ctx){inv.logo=dataUrl;renderLogo();applyTheme();return;}
+            ctx.drawImage(img,0,0,w,h);
+            inv.logo=(file.type==='image/png')?canvas.toDataURL('image/png'):canvas.toDataURL('image/jpeg',0.9);
+            inv.logoPalette=extractPalette(ctx,w,h);
+            renderLogo();applyTheme();
+          };
+          img.onerror=function(){inv.logo=dataUrl;renderLogo();applyTheme();};
+          img.src=dataUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+      function renderLogo(){
+        var area=el('logoArea');area.innerHTML='';
+        if(inv.logo){
+          var wrap=document.createElement('div');wrap.className='logo-preview';
+          var img=document.createElement('img');img.src=inv.logo;img.alt='Logo';
+          var tools=document.createElement('div');tools.className='logo-tools print-hidden';
+          var lab=document.createElement('label');lab.className='logo-tool logo-tool-primary';lab.title='Replace logo';lab.innerHTML=PENCIL_SVG;
+          var fi=document.createElement('input');fi.type='file';fi.accept='image/*';fi.hidden=true;
+          fi.addEventListener('change',function(){if(fi.files&&fi.files[0])handleLogoFile(fi.files[0]);});
+          lab.appendChild(fi);
+          var rm=document.createElement('button');rm.type='button';rm.className='logo-tool logo-tool-danger';rm.title='Remove logo';rm.innerHTML=X_SVG;
+          rm.addEventListener('click',function(){inv.logo=null;inv.logoPalette=[];inv.themeColor=null;applyTheme();renderLogo();});
+          tools.appendChild(lab);tools.appendChild(rm);
+          wrap.appendChild(img);wrap.appendChild(tools);
+          area.appendChild(wrap);
+        }else{
+          var lab2=document.createElement('label');lab2.className='logo-upload print-hidden';
+          lab2.innerHTML=UPLOAD_SVG+'<span>Upload Logo</span>';
+          var fi2=document.createElement('input');fi2.type='file';fi2.accept='image/*';fi2.hidden=true;
+          fi2.addEventListener('change',function(){if(fi2.files&&fi2.files[0])handleLogoFile(fi2.files[0]);});
+          lab2.appendChild(fi2);
+          area.appendChild(lab2);
+        }
+        renderThemeRow();
+      }
+
+      /* ---------------- Agenticmyze brand switch ---------------- */
+      function applyAgenticVisual(){
+        setFieldValue('from',inv.from);
+        setFieldValue('poNumber',inv.poNumber);
+        setFieldValue('notes',inv.notes);
+        refreshTermsDisplay();
+        syncLabelsOnly();
+        var rows=el('itemsBody').querySelectorAll('.item-row');
+        inv.items.forEach(function(it,i){var r=rows[i];if(r){var inp=r.querySelector('input');if(inp&&document.activeElement!==inp)inp.value=it.description;}});
+      }
+      function syncLabelsOnly(){
+        document.querySelectorAll('[data-label]').forEach(function(elm){
+          var v=inv.labels[elm.getAttribute('data-label')];
+          if(v!=null&&elm.textContent!==v&&document.activeElement!==elm)elm.textContent=v;
+        });
+      }
+      function applyAgentic(){
+        inv.from=brandSwap(inv.from);
+        inv.notes=AGENTIC_NOTES;
+        inv.terms=brandSwap(inv.terms);
+        inv.poNumber=brandSwap(inv.poNumber);
+        inv.items.forEach(function(it){it.description=brandSwap(it.description);});
+        Object.keys(inv.labels).forEach(function(k){inv.labels[k]=brandSwap(inv.labels[k]);});
+        inv.brand='agenticmyze';
+        applyAgenticVisual();
+      }
+      function checkBrand(){
+        if(inv.brand==='agenticmyze')return;
+        var hay=[aiText,inv.poNumber,inv.from,inv.notes,inv.terms].concat(inv.items.map(function(i){return i.description;})).join(' ');
+        if(isAgentic(hay))applyAgentic();
+      }
+
+      /* ---------------- copy buttons (bank lines + setup) ---------------- */
+      function copyTextValue(value,btn,label){
+        function done(){
+          toastSuccess(label+' copied');
+          if(btn){
+            var prev=btn.innerHTML;btn.innerHTML=CHECK_SVG;
+            setTimeout(function(){btn.innerHTML=prev;},1800);
+          }
+        }
+        function fallback(){
+          var ta=document.createElement('textarea');ta.value=value;ta.style.position='fixed';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();
+          try{document.execCommand('copy');done();}
+          catch(e){toastError('Could not copy '+label.toLowerCase());}
+          document.body.removeChild(ta);
+        }
+        if(!String(value||'').trim()){toastError('Nothing to copy yet');return;}
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          navigator.clipboard.writeText(value).then(done,fallback);
+        }else{fallback();}
+      }
+      document.querySelectorAll('[data-copy-field]').forEach(function(btn){
+        btn.innerHTML=COPY_SVG;
+        btn.addEventListener('click',function(){
+          var f=btn.getAttribute('data-copy-field');
+          var labels={bankName:'Bank name',bankTitle:'Title name',bankAccount:'Account number'};
+          copyTextValue(inv[f],btn,labels[f]||'Text');
+        });
+      });
+      document.querySelectorAll('[data-copy-text]').forEach(function(btn){
+        btn.addEventListener('click',function(){copyTextValue(btn.getAttribute('data-copy-text'),null,'Variable name');});
+      });
+
+      /* ---------------- sync whole form from state ---------------- */
+      function syncAll(){
+        currencySelect.value=inv.currency;
+        el('invoiceNumber').value=inv.invoiceNumber;
+        ['from','billTo','shipTo','date','timeline','paymentTerms','dueDate','poNumber','notes','taxRate','discount','shipping','amountPaid','totalInPkr','scheduledPayment','scheduledDate','toBePaidToday','bankName','bankTitle','bankAccount','bankNote','stripeLink'].forEach(function(f){setFieldValue(f,inv[f]);});
+        termsField.value=displayTerms();
+        syncLabels();
+        buildItems();
+        buildExtras();
+        renderLogo();
+        applyTheme();
+        renderStripeLink();
+        recalc();
+      }
+
+      /* ---------------- save / saved invoices ---------------- */
+      function displayName(){
+        var ue=firstLine(inv.billTo)||firstLine(inv.from);
+        return [ue,inv.invoiceNumber,inv.date].filter(Boolean).join(' — ');
+      }
+      function pdfFileName(){
+        var ue=firstLine(inv.billTo)||firstLine(inv.from);
+        var raw=ue?(ue+' '+(inv.invoiceNumber||'')).trim():(inv.invoiceNumber||'invoice');
+        return raw.replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim()||'invoice';
+      }
+      function makeEntry(){
+        return{
+          id:inv.savedId||inv.invoiceNumber,
+          savedAt:Date.now(),
+          invoiceNumber:inv.invoiceNumber,
+          displayName:displayName(),
+          total:totals().total,
+          currencySymbol:cur().symbol,
+          snapshot:JSON.parse(JSON.stringify(inv))
+        };
+      }
+      function storeEntry(entry){
+        savedList=[entry].concat(savedList.filter(function(e){return e.invoiceNumber!==entry.invoiceNumber;}))
+          .sort(function(a,b){return b.savedAt-a.savedAt;});
+      }
+      el('saveBtn').addEventListener('click',function(){
+        try{storeEntry(makeEntry());toastSuccess('Invoice saved to Saved Invoices');}
+        catch(e){console.error('Save error:',e);toastError('Could not save invoice');}
+      });
+      el('savedBtn').addEventListener('click',function(){
+        try{storeEntry(makeEntry());toastSuccess('Invoice saved');showSaved();}
+        catch(e){console.error('Save error:',e);toastError('Could not save invoice');}
+      });
+      function showSaved(){
+        el('editorView').style.display='none';
+        el('savedView').style.display='';
+        renderSaved();
+        window.scrollTo({top:0});
+      }
+      function showEditor(){
+        el('savedView').style.display='none';
+        el('editorView').style.display='';
+        window.scrollTo({top:0});
+      }
+      el('backBtn').addEventListener('click',showEditor);
+      function renderSaved(){
+        var c=el('savedContent');
+        if(!savedList.length){
+          c.innerHTML='<div class="card empty-state">'
+            +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>'
+            +'<h2>No saved invoices yet</h2>'
+            +'<p>Click Save or download an invoice as PDF and it will appear here.</p>'
+            +'<button type="button" class="btn btn-primary" id="createInvoiceBtn" style="margin-top:1rem">Create an invoice</button>'
+            +'</div>';
+          el('createInvoiceBtn').addEventListener('click',showEditor);
+          return;
+        }
+        var html='<div class="card saved-table"><div class="saved-head-row"><div class="sc-invoice">Invoice</div><div class="sc-saved">Saved</div><div class="sc-total">Total</div><div class="sc-actions"></div></div>';
+        savedList.forEach(function(s){
+          html+='<div class="saved-row">'
+            +'<div class="sc-invoice"><button type="button" class="saved-name" data-open="'+esc(s.id)+'">'+esc(s.displayName||s.invoiceNumber||'Untitled')+'</button>'
+            +(s.displayName?'<div class="saved-num">'+esc(s.invoiceNumber)+'</div>':'')
+            +'<div class="saved-kept">Kept for 60 years</div></div>'
+            +'<div class="sc-saved">'+esc(new Date(s.savedAt).toLocaleString())+'</div>'
+            +'<div class="sc-total">'+esc(s.currencySymbol)+Number(s.total).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>'
+            +'<div class="sc-actions">'
+            +'<button type="button" class="saved-action" data-open="'+esc(s.id)+'" aria-label="Open" title="Open &amp; edit">'+PENCIL_SVG+'</button>'
+            +'<button type="button" class="saved-action danger" data-del="'+esc(s.id)+'" aria-label="Delete" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>'
+            +'</div></div>';
+        });
+        html+='</div>';
+        c.innerHTML=html;
+        c.querySelectorAll('[data-open]').forEach(function(b){
+          b.addEventListener('click',function(){
+            var entry=null;
+            savedList.forEach(function(s){if(s.id===b.getAttribute('data-open'))entry=s;});
+            if(entry)openSaved(entry);
+          });
+        });
+        c.querySelectorAll('[data-del]').forEach(function(b){
+          b.addEventListener('click',function(){
+            var entry=null;
+            savedList.forEach(function(s){if(s.id===b.getAttribute('data-del'))entry=s;});
+            if(!entry)return;
+            savedList=savedList.filter(function(x){return x.id!==entry.id&&x.invoiceNumber!==entry.invoiceNumber;});
+            toastSuccess('Invoice removed');
+            renderSaved();
+          });
+        });
+      }
+      function openSaved(entry){
+        try{
+          var snap=JSON.parse(JSON.stringify(entry.snapshot));
+          var base=defaultInvoice();
+          inv=Object.assign(base,snap);
+          inv.labels=Object.assign({},DEFAULT_LABELS,snap.labels||{});
+          inv.items=(snap.items&&snap.items.length?snap.items:[newItem()]).map(function(it){return{id:it.id||nid(),description:it.description||'',quantity:it.quantity||'',rate:it.rate||''};});
+          inv.additionalPayments=(snap.additionalPayments||[]).map(function(p){return{id:p.id||nid(),amount:p.amount||'',date:p.date||''};});
+          syncAll();
+          showEditor();
+        }catch(e){console.error(e);toastError('Could not open invoice');}
+      }
+
+      /* ---------------- print & PDF ---------------- */
+      var exitPrintPreview=null;
+      el('printBtn').addEventListener('click',function(){
+        if(exitPrintPreview)return;
+        var restore=prepareExport();
+        document.body.classList.add('print-preview');
+        el('printBar').classList.add('open');
+        window.scrollTo({top:0});
+        exitPrintPreview=function(){
+          restore();
+          document.body.classList.remove('print-preview');
+          el('printBar').classList.remove('open');
+          exitPrintPreview=null;
+        };
+      });
+      el('exitPrintBtn').addEventListener('click',function(){
+        if(exitPrintPreview)exitPrintPreview();
+      });
+      function prepareExport(){
+        var card=el('invoiceCard');
+        var restores=[];
+        function hide(target){if(!target)return;var prev=target.style.display;target.style.display='none';restores.push(function(){target.style.display=prev;});}
+        function q(sel){return card.querySelector(sel);}
+        if(!inv.shipTo.trim())hide(q('[data-export="shipTo"]'));
+        if(!inv.paymentTerms.trim())hide(q('[data-export="paymentTerms"]'));
+        if(!String(inv.timeline||'').trim())hide(q('[data-export="timeline"]'));
+        if(!inv.dueDate)hide(q('[data-export="dueDate"]'));
+        if(!inv.poNumber.trim())hide(q('[data-export="poNumber"]'));
+        if(!String(inv.notes||'').trim())hide(q('[data-export="notes"]'));
+        if(!inv.terms.trim())hide(q('[data-export="terms"]'));
+        if(!hasText(inv.scheduledPayment)&&!hasText(inv.scheduledDate))hide(q('[data-export="scheduled"]'));
+        inv.additionalPayments.forEach(function(p){
+          if(!hasText(p.amount)&&!hasText(p.date))hide(card.querySelector('[data-payment-id="'+p.id+'"]'));
+        });
+        if(!hasText(inv.toBePaidToday))hide(q('[data-export="toBePaidToday"]'));
+        if(!inv.bankName.trim()&&!inv.bankTitle.trim()&&!inv.bankAccount.trim()&&!inv.bankNote.trim())hide(q('[data-export="bank"]'));
+        if(!inv.bankNote.trim())hide(q('[data-field="bankNote"]'));
+        if(!inv.stripeLink.trim())hide(q('[data-export="stripe"]'));
+        if(!String(inv.taxRate).trim())hide(q('[data-export="tax"]'));
+        if(!String(inv.discount).trim())hide(q('[data-export="discount"]'));
+        if(!String(inv.shipping).trim())hide(q('[data-export="shipping"]'));
+        if(!String(inv.amountPaid).trim())hide(q('[data-export="amountPaid"]'));
+        if(!String(inv.totalInPkr).trim())hide(q('[data-export="totalInPkr"]'));
+        if(!inv.from.trim())hide(q('[data-export="from"]'));
+        if(!inv.billTo.trim())hide(q('[data-export="billTo"]'));
+        if(!inv.invoiceNumber.trim())hide(q('[data-export="invoiceNumber"]'));
+        if(!inv.date)hide(q('[data-export="date"]'));
+        card.querySelectorAll('.print-hidden').forEach(function(elm){hide(elm);});
+        var root=document.documentElement;
+        var props=['--primary','--accent','--primary-foreground','--accent-foreground'];
+        var savedProps={};
+        props.forEach(function(p){savedProps[p]=root.style.getPropertyValue(p);root.style.removeProperty(p);});
+        restores.push(function(){props.forEach(function(p){if(savedProps[p])root.style.setProperty(p,savedProps[p]);else root.style.removeProperty(p);});});
+        card.classList.add('exporting');
+        restores.push(function(){card.classList.remove('exporting');});
+        card.querySelectorAll('input, textarea').forEach(function(inp){
+          if(inp.type!=='file'&&!inp.value.trim()){
+            var prev=inp.style.visibility;inp.style.visibility='hidden';
+            restores.push(function(){inp.style.visibility=prev;});
+          }
+        });
+        inv.items.forEach(function(it,idx){
+          if(!it.description.trim()&&!it.quantity.trim()&&!it.rate.trim())hide(card.querySelector('[data-item-index="'+idx+'"]'));
+        });
+        return function(){restores.forEach(function(fn){fn();});};
+      }
+      el('pdfBtn').addEventListener('click',function(){
+        var savedOk=false;
+        try{storeEntry(makeEntry());savedOk=true;}catch(e){console.warn('Could not save invoice snapshot:',e);}
+        toastLoading('Generating PDF...','pdf');
+        var restore=prepareExport();
+        var card=el('invoiceCard');
+        function fail(err){
+          console.error('PDF error:',err);
+          restore();
+          toastError('Failed to generate PDF','pdf');
+        }
+        if(!window.htmlToImage||!window.jspdf||!window.jspdf.jsPDF){fail(new Error('PDF libraries unavailable'));return;}
+        window.htmlToImage.toJpeg(card,{pixelRatio:1.5,quality:0.82,backgroundColor:'#ffffff',cacheBust:true})
+          .then(function(dataUrl){
+            var img=new Image();
+            img.onload=function(){
+              try{
+                var pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4',compress:true});
+                var pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight();
+                var k=Math.min(pw/img.width,ph/img.height);
+                var w=img.width*k,h=img.height*k;
+                pdf.addImage(dataUrl,'JPEG',(pw-w)/2,20,w,h,undefined,'FAST');
+                pdf.save(pdfFileName()+'.pdf');
+                restore();
+                toastSuccess(savedOk?'PDF downloaded & saved':'PDF downloaded, but not saved','pdf');
+              }catch(err){fail(err);}
+            };
+            img.onerror=function(){fail(new Error('image load failed'));};
+            img.src=dataUrl;
+          },fail);
+      });
+
+      /* ---------------- AI Invoice Maker (local parser) ---------------- */
+      el('aiText').addEventListener('input',function(){aiText=this.value;checkBrand();});
+      function cleanDesc(s){
+        var out=String(s||'').replace(/\$[\d,]+(?:\.\d+)?/g,'').replace(/\s{2,}/g,' ').trim();
+        return out||String(s||'').trim();
+      }
+      function parseProposal(text){
+        var out={items:[]};
+        function get(re){var m=text.match(re);return m?m[1].trim():'';}
+        var client=get(/(?:client|customer|bill\s*to|buyer)\s*[:\-]\s*(.+)/i);
+        if(client){
+          var parts=client.split(/\s+from\s+/i);
+          out.billTo=parts.length>1?(parts[0].trim()+'\n'+parts[1].trim()):client;
+        }
+        if(!out.billTo){
+          /* No contact details given — just a name / company is enough. */
+          var forM=text.match(/(?:invoice\s+)?for\s+([A-Z][\w&.'-]*(?:\s+[A-Z][\w&.'-]*){0,3})/);
+          if(forM)out.billTo=forM[1].trim();
+        }
+        if(!out.billTo){
+          var lines=text.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);
+          for(var li=0;li<lines.length;li++){
+            var L=lines[li];
+            if(/[:$€£₨]|\d{3,}|^(rate|price|total|contract|payment|product|service)\b/i.test(L))continue;
+            var cleaned=L.replace(/\s*[—–-]\s*(quick[-\s]?start|business[-\s]?catalyst|elite|personali[sz]ed).*$/i,'').replace(/\b(quick[-\s]?start|business[-\s]?catalyst|elite)\s*(package|plan)?\b.*$/i,'').trim();
+            if(cleaned&&cleaned.length>=2&&cleaned.length<=60&&/[A-Za-z]/.test(cleaned)){out.billTo=cleaned;break;}
+          }
+        }
+        out.packageKey=detectPackage(text);
+        out.poNumber=get(/(?:product(?:\s*name)?|service|package|plan)\s*[:\-]\s*(.+)/i);
+        out.paymentTerms=get(/(?:payment\s*terms)\s*[:\-]\s*(.+)/i)||(text.match(/\b(Net\s*\d+)\b/i)||[])[1]||'';
+        if(out.paymentTerms)out.paymentTerms=out.paymentTerms.replace(/^net/i,'Net');
+        out.taxRate=get(/tax\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*%/i);
+        out.discount=get(/discount\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)/i);
+        out.shipping=get(/(?:shipping|delivery)\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)/i);
+        out.amountPaid=get(/(?:amount\s*paid|deposit|paid)\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)/i);
+        out.scheduledPayment=get(/(?:scheduled\s*payment|next\s*payment|upfront|advance)\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)/i);
+        if(/₨|\bPKR\b/i.test(text))out.currency='PKR';
+        else if(/€|\bEUR\b/i.test(text))out.currency='EUR';
+        else if(/£|\bGBP\b/i.test(text))out.currency='GBP';
+        else if(/\bUSD\b|\$/.test(text))out.currency='USD';
+        var skipRe=/^(client|customer|bill\s*to|product|service|package|plan|payment\s*terms|contract|project|timeline|tax|discount|shipping|delivery|total|amount\s*paid|deposit|scheduled|next\s*payment)\b/i;
+        text.split(/\r?\n/).forEach(function(line){
+          var t=line.trim();if(!t)return;
+          var m;
+          if((m=t.match(/^rate\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)\s*$/i))){
+            out.items.push({id:nid(),description:out.poNumber||'Service',quantity:'1',rate:m[1].replace(/,/g,'')});
+            return;
+          }
+          if(skipRe.test(t))return;
+          if((m=t.match(/^(?:[-•*]\s*)?(.+?)\s*[:\-–]\s*\$?\s*([\d,]+(?:\.\d+)?)\s*$/))){
+            out.items.push({id:nid(),description:cleanDesc(m[1]),quantity:'1',rate:m[2].replace(/,/g,'')});
+            return;
+          }
+          if((m=t.match(/^(?:[-•*]\s*)?(.+?)\s+\$\s*([\d,]+(?:\.\d+)?)\s*$/))){
+            out.items.push({id:nid(),description:cleanDesc(m[1]),quantity:'1',rate:m[2].replace(/,/g,'')});
+          }
+        });
+        var rate=get(/(?:rate|price|cost|amount)\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d+)?)/i);
+        if(rate&&!out.items.length){
+          out.items.push({id:nid(),description:out.poNumber||'Service',quantity:'1',rate:rate.replace(/,/g,'')});
+        }
+        return out;
+      }
+      function applyGenerated(n){
+        var pkgKey=n.packageKey||detectPackage(aiText+' '+(n.poNumber||''));
+        var pkg=pkgKey?PACKAGES[pkgKey]:null;
+        var agentic=isAgentic(aiText+' '+(n.poNumber||''))||pkgKey==='quickstart'||pkgKey==='businesscatalyst';
+        inv.billTo=n.billTo?n.billTo:inv.billTo;
+        inv.from=DEFAULT_FROM;
+        inv.poNumber=n.poNumber?n.poNumber:(pkg?pkg.product:inv.poNumber);
+        inv.paymentTerms=n.paymentTerms?n.paymentTerms:inv.paymentTerms;
+        /* Contract timeline: whatever the text explicitly states, otherwise 60 days for every product. Always editable afterwards. */
+        inv.timeline=(n.contractTimelineDays?String(n.contractTimelineDays)+' Days':(parseTimeline(aiText)||DEFAULT_TIMELINE));
+        inv.date=todayStr();
+        inv.dueDate=dueFromTimeline(inv.timeline,inv.date);
+        if(n.currency&&CURRENCIES.some(function(c){return c.code===n.currency;}))inv.currency=n.currency;
+        if(n.items&&n.items.length)inv.items=n.items;
+        else if(pkg)inv.items=[{id:nid(),description:pkg.product,quantity:'1',rate:''}];
+        inv.channel=detectChannel(aiText+' '+(n.poNumber||''));
+        if(pkg){
+          /* Consulting business: personalised Description + Notes for this package and this person. */
+          inv.notes=pkg.description;
+          inv.terms=pkg.notes;
+        }else if(agentic){
+          inv.notes=AGENTIC_NOTES;
+          inv.terms=DEFAULT_TERMS;
+        }else{
+          inv.notes=notesFor(inv.channel);
+          inv.terms=DEFAULT_TERMS;
+        }
+        if(n.taxRate)inv.taxRate=n.taxRate;
+        if(n.discount)inv.discount=n.discount;
+        if(n.shipping)inv.shipping=n.shipping;
+        if(n.amountPaid)inv.amountPaid=n.amountPaid;
+        if(n.scheduledPayment)inv.scheduledPayment=n.scheduledPayment;
+        inv.brand='appointfunnels';
+        if(agentic)applyAgentic();
+        if(pkg){
+          /* Agenticmyze switch rewrites the Description — put the package-personalised one back. */
+          inv.notes=pkg.description;
+          inv.terms=pkg.notes;
+          if(!inv.poNumber)inv.poNumber=pkg.product;
+          applyAgenticVisual();
+        }
+        syncAll();
+      }
+      /* ---------------- AI generation via backend (/api/generate-invoice) ---------------- */
+      /* The OpenAI key lives ONLY on the server, as an environment variable. */
+      /* The browser never sees a key and never calls OpenAI directly. */
+      function generateViaBackend(text){
+        return fetch('/api/generate-invoice',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({text:text})
+        }).then(function(r){
+          if(r.status===501)throw new Error('AI backend not configured');
+          if(!r.ok)throw new Error('AI backend request failed ('+r.status+')');
+          return r.json();
+        }).then(function(parsed){
+          var n={items:[]};
+          ['billTo','poNumber','paymentTerms','currency','taxRate','discount','shipping','amountPaid','scheduledPayment','description','notes','company','category'].forEach(function(k){if(parsed[k]!=null)n[k]=String(parsed[k]);});
+          if(Array.isArray(parsed.items)){
+            n.items=parsed.items.map(function(it){return{id:nid(),description:String(it.description||''),quantity:String(it.quantity||'1'),rate:String(it.rate||'').replace(/,/g,'')};}).filter(function(it){return it.description||it.rate;});
+          }
+          if(parsed.contractTimelineDays!=null)n.contractTimelineDays=parsed.contractTimelineDays;
+          if(parsed.dueDays!=null)n.dueDays=parsed.dueDays;
+          n.packageKey=detectPackage(text+' '+(n.poNumber||''));
+          return n;
+        });
+      }
+      function renderGenerateBtn(){
+        var btn=el('generateBtn');
+        btn.disabled=generating;
+        btn.innerHTML=(generating?'<span class="spinner"></span>':SPARKLE_SVG)+' Generate invoice';
+      }
+      el('generateBtn').addEventListener('click',function(){
+        if(!aiText.trim()){toastError('Paste your proposal or pricing first');return;}
+        if(generating)return;
+        generating=true;renderGenerateBtn();
+        function finish(){generating=false;renderGenerateBtn();}
+        function runLocal(note){
+          try{
+            var n=parseProposal(aiText);
+            applyGenerated(n);
+            toastSuccess(note||'Invoice filled from your text','ai');
+          }catch(e){
+            console.error('AI error:',e);
+            toastError('AI failed','ai');
+          }finally{finish();}
+        }
+        toastLoading('Asking the AI backend...','ai');
+        generateViaBackend(aiText).then(function(n){
+          try{
+            applyGenerated(n);
+            if(n.description)inv.notes=n.description;
+            if(n.notes)inv.terms=n.notes;
+            if(n.description||n.notes)syncAll();
+            toastSuccess('Invoice filled by AI','ai');
+          }catch(e){
+            console.error('AI apply error:',e);
+            runLocal();
+            return;
+          }
+          finish();
+        },function(err){
+          console.error('AI backend error:',err);
+          toastError('AI backend not configured — filled it with the built-in parser instead','ai');
+          runLocal('Invoice filled from your text');
+        });
+      });
+
+      /* ---------------- samples ---------------- */
+      function renderSamples(){
+        var grid=el('samplesGrid');grid.innerHTML='';
+        SAMPLES.forEach(function(s){
+          var sub=s.items.reduce(function(a,it){
+            var m=String(it.rate).match(/-?\d+(\.\d+)?/);
+            return a+(m?Number(m[0]):0);
+          },0);
+          var card=document.createElement('div');card.className='card sample-card';
+          var itemsHtml=s.items.map(function(it){
+            return '<li><span class="d">'+esc(it.description)+'</span><span class="p">'+(it.rate?('$'+esc(it.rate)):'—')+'</span></li>';
+          }).join('');
+          card.innerHTML='<div class="sample-head"><div><h3>'+esc(s.title)+'</h3><p>'+esc(s.tagline)+'</p></div>'
+            +'<span class="sample-badge">'+esc(s.product)+'</span></div>'
+            +'<ul class="sample-items">'+itemsHtml+'</ul>'
+            +'<div class="sample-subtotal"><span class="s-label">Subtotal</span><span class="s-value">$'+sub.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</span></div>'
+            +'<button type="button" class="btn btn-primary sample-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Use this sample</button>';
+          card.querySelector('button').addEventListener('click',function(){loadSample(s);});
+          grid.appendChild(card);
+        });
+      }
+      function loadSample(s){
+        var keepLogo=inv.logo,keepPalette=inv.logoPalette,keepTheme=inv.themeColor,keepCurrency=inv.currency;
+        var ch=detectChannel(s.title+' '+s.product);
+        var base=defaultInvoice();
+        inv=base;
+        inv.logo=keepLogo;inv.logoPalette=keepPalette;inv.themeColor=keepTheme;
+        inv.currency=s.currency?s.currency:keepCurrency;
+        inv.invoiceNumber='INV-'+String(Date.now()).slice(-6);
+        inv.from=DEFAULT_FROM;
+        inv.billTo=s.billTo?s.billTo:'';
+        inv.shipTo='';
+        inv.date=s.date?s.date:todayStr();
+        inv.timeline=DEFAULT_TIMELINE;
+        inv.paymentTerms=s.paymentTerms?s.paymentTerms:'Net 60';
+        inv.dueDate=dueFromTimeline(inv.timeline,inv.date);
+        inv.poNumber=s.product;
+        inv.items=s.items.map(function(it){return{id:nid(),description:it.description,quantity:it.quantity,rate:it.rate};});
+        inv.channel=ch;
+        inv.notes=s.notes?s.notes:notesFor(ch);
+        inv.terms=s.terms?s.terms:DEFAULT_TERMS;
+        if(detectPackage(s.title+' '+s.product)==='quickstart'||detectPackage(s.title+' '+s.product)==='businesscatalyst'){
+          inv.brand='appointfunnels';
+          var keepNotes=inv.notes,keepTerms=inv.terms;
+          applyAgentic();
+          inv.notes=keepNotes;inv.terms=keepTerms;
+          applyAgenticVisual();
+        }
+        inv.amountPaid=s.amountPaid?String(s.amountPaid):'';
+        inv.scheduledPayment=s.scheduledPayment?String(s.scheduledPayment):'';
+        syncAll();
+        toastSuccess('Loaded sample: '+s.title);
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      /* ---------------- init ---------------- */
+      syncAll();
+      renderSamples();
+    })();
+    </script>
+  </body>
+</html>

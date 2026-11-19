@@ -1,0 +1,1 @@
+{"$schema":"https://openapi.vercel.sh/vercel.json","cleanUrls":false,"functions":{"api/generate-invoice.js":{"maxDuration":30}},"rewrites":[{"destination":"/api/generate-invoice.js","source":"/api/generate-invoice"}]}
