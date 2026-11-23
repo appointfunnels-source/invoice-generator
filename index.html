@@ -682,8 +682,8 @@ Address"></textarea>
       /* Consulting packages (Agenticmyze): personalised Description + Notes per package. */
       var PACKAGES={
         quickstart:{name:'Quick-Start',product:'Quick-Start Plan',price:'40000',currency:'PKR',
-          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first client in 60 days. We build it with you, step by step — your niche, your offer, your first client — with a weekly call with the company director to keep you on track.',
-          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running — your Quick-Start Plan is all about that first client, and we'll work with you until you're booked and closing.",
+          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first client in 60 days.',
+          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running.",
           items:[
             {description:'Complete consultation — offer to sales-call closing, every live class included',quantity:'1',rate:'40000'},
             {description:'n8n and GoHighLevel — your agentic systems, built for you',quantity:'1',rate:'0'},
@@ -695,8 +695,8 @@ Address"></textarea>
             {description:'Stripe payment access — collect payments and keep 100%',quantity:'1',rate:'0'}
           ]},
         businesscatalyst:{name:'Business-Catalyst',product:'Business-Catalyst Plan',price:'59999',currency:'PKR',
-          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days. The full build — Claude Code systems, 50+ sales call recordings, weekly sales call reviews, and every tool and system we use ourselves.',
-          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running — your Business-Catalyst Plan guarantees 2 clients in 60 days, and we'll be reviewing your calls with you every week until you're landing them consistently.",
+          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days.',
+          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running.",
           items:[
             {description:'Complete consultation — offer to sales-call closing, every live class included',quantity:'1',rate:'59999'},
             {description:'20+ proven closing results and deal breakdowns to learn from',quantity:'1',rate:'0'},
@@ -709,11 +709,11 @@ Address"></textarea>
             {description:'Stripe payment access — collect payments and keep 100%',quantity:'1',rate:'0'}
           ]},
         elite:{name:'Elite',product:'Elite Package',
-          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days. A premium, personalised plan built around your business, your goals, and the clients you want to win.',
-          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running — your Elite Plan is built around you, and we'll work with you until you're booked and closing."},
+          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days.',
+          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running."},
         personalised:{name:'Personalised Plan',product:'Personalised Plan',
-          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first client in 60 days. Built around your business — your niche, your offer, and the clients you want to win.',
-          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running — your Personalised Plan is made for you, and we'll work with you until you're booked and closing."}
+          description:'Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first client in 60 days.',
+          notes:"{{firstName}} Thanks For Choosing Agenticmyze. We're excited to get your pipeline running."}
       };
       function detectPackage(s){
         var t=String(s||'').toLowerCase().replace(/[\s_]+/g,'-');
