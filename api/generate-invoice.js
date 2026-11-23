@@ -61,14 +61,14 @@ module.exports = async function handler(req, res) {
     'Rules: the contract timeline is 60 days for every product unless the text explicitly states a different contract timeline — ' +
     'never treat a guarantee period (e.g. "10 jobs guaranteed in 60 days") as anything else. ' +
     'Due date is always invoice date + contract timeline days. ' +
-    'If the text names a consulting package, set poNumber and package to that package name: ' +
-    'Quick Start = 1 client guaranteed, teaching offer making, niche and offer, client acquisition and closing, 60 days; ' +
-    'Business Catalyst = 2 clients guaranteed, Claude Code operating systems, 50+ sales call recordings, installments, 60 days; ' +
+    'If the text names a consulting package, set poNumber and package to that package name, currency to PKR, and use the FIXED price and items below — do not invent a different price: ' +
+    'Quick Start = poNumber "Quick-Start Plan", 40,000 PKR total, 1 client guaranteed, 60 days. Items: complete consultation (offer to sales-call closing, every live class included) at 40000, then n8n and GoHighLevel systems, Apollo / landline remover / Telnyx / Apify cold SMS stack, AppointFunnels white-label access, Instantly / Zapmail / Apollo / MillionVerifier cold email stack, one power dialer, a done-for-you website, Stripe payment access — all at 0. Quick Start has NO Claude Code and NO testimonials or results access. ' +
+    'Business Catalyst = poNumber "Business-Catalyst Plan", 59,999 PKR total, 2 clients guaranteed, 60 days, installments available. Items: complete consultation (offer to sales-call closing, every live class included) at 59999, then 20+ proven closing results and deal breakdowns, n8n / GoHighLevel / Claude Code full agentic systems build, Apollo / landline remover / Telnyx / Apify cold SMS stack, AppointFunnels white-label access, Instantly / Zapmail / Apollo / MillionVerifier cold email stack, one power dialer, a done-for-you website, Stripe payment access — all at 0. ' +
     'Elite = premium consulting package. ' +
-    'Write description and notes personalised to the named person/company and package, about the consulting work (offer making, niche, client acquisition, closing). ' +
+    'Write description and notes in your own words, personalised to the named person/company and package, about the consulting work (offer making, niche, client acquisition, closing). ' +
     'If the text mentions Agenticmyze, keep that brand name in descriptions. ' +
-    'Do not invent prices, emails or addresses that are not in the text. ' +
-    'If no price is in the text, leave rate as an empty string so the user can fill it.';
+    'Do not invent prices, emails or addresses that are not in the text, except for the fixed package prices above. ' +
+    'If no price is in the text and no package is named, leave rate as an empty string so the user can fill it.';
 
   let upstream;
   try {

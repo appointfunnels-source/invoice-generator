@@ -681,12 +681,33 @@ Address"></textarea>
       var AGENTIC_NOTES='Complete AI automation business setup, from niche and offer to client acquisition and closing, designed to get you booked appointments and land your first 2 clients in 60 days.';
       /* Consulting packages (Agenticmyze): personalised Description + Notes per package. */
       var PACKAGES={
-        quickstart:{name:'Quick-Start',product:'Quick-Start Package',
-          description:'Quick-Start consulting package — complete AI automation business setup, from niche selection and offer making to client acquisition and closing, designed to land your first client in 60 days. Covers consultation, offer creation and client hunting, with a weekly call overview with the company director. 1 client guaranteed.',
-          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Quick-Start package guarantees your first client within the 60-day contract timeline — we work with you on niche, offer making, client hunting and closing until you are booked and closing.'},
-        businesscatalyst:{name:'Business-Catalyst',product:'Business-Catalyst Package',
-          description:'Business-Catalyst consulting package — complete AI automation business setup, from niche selection and offer making to client acquisition and closing, designed to land your first 2 clients in 60 days. Includes Claude Code operating systems, 50+ sales call recordings to learn from, and weekly sales call reviews. 2 clients guaranteed.',
-          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Business-Catalyst package guarantees 2 clients within the 60-day contract timeline — offer making, client acquisition systems and closing support are all covered, and this is the plan that can be paid in monthly installments.'},
+        quickstart:{name:'Quick-Start',product:'Quick-Start Plan',price:'40000',currency:'PKR',
+          description:'Quick-Start is the fastest way in — we build your AI automation business with you, from picking a niche and shaping an offer people actually want, to finding clients and closing them. Hands-on consultation all the way through to your first closed client, with a weekly call with the company director to keep you on track. 1 client guaranteed in 60 days.',
+          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Quick-Start Plan is built around one goal — your first client in 60 days. We work with you on your niche, your offer, finding clients and closing them, until you are booked and closing.',
+          items:[
+            {description:'Complete consultation — offer to sales-call closing, every live class included',quantity:'1',rate:'40000'},
+            {description:'n8n and GoHighLevel — your agentic systems, built for you',quantity:'1',rate:'0'},
+            {description:'Apollo, landline remover, Telnyx and Apify — cold SMS stack, ready to run',quantity:'1',rate:'0'},
+            {description:'AppointFunnels white-label access — run it under your own brand',quantity:'1',rate:'0'},
+            {description:'Instantly, Zapmail, Apollo and MillionVerifier — cold email stack, ready to run',quantity:'1',rate:'0'},
+            {description:'One power dialer for cold calling',quantity:'1',rate:'0'},
+            {description:'A done-for-you website for your company',quantity:'1',rate:'0'},
+            {description:'Stripe payment access — collect payments and keep 100%',quantity:'1',rate:'0'}
+          ]},
+        businesscatalyst:{name:'Business-Catalyst',product:'Business-Catalyst Plan',price:'59999',currency:'PKR',
+          description:'Business-Catalyst is the full build — everything in Quick-Start, plus the operating systems that run the business for you. Claude Code systems, 50+ real sales call recordings to learn from, weekly sales call reviews, and the results, tools and white-label setup our own team uses. Built to land your first 2 clients in 60 days, with monthly installments available.',
+          notes:'{{firstName}} Thanks for choosing Agenticmyze. Your Business-Catalyst Plan guarantees 2 clients in 60 days — we build the offer, the systems and the closing support around you, and review your sales calls every week until you are landing clients consistently.',
+          items:[
+            {description:'Complete consultation — offer to sales-call closing, every live class included',quantity:'1',rate:'59999'},
+            {description:'20+ proven closing results and deal breakdowns to learn from',quantity:'1',rate:'0'},
+            {description:'n8n, GoHighLevel and Claude Code — your full agentic systems build',quantity:'1',rate:'0'},
+            {description:'Apollo, landline remover, Telnyx and Apify — cold SMS stack, ready to run',quantity:'1',rate:'0'},
+            {description:'AppointFunnels white-label access — run it under your own brand',quantity:'1',rate:'0'},
+            {description:'Instantly, Zapmail, Apollo and MillionVerifier — cold email stack, ready to run',quantity:'1',rate:'0'},
+            {description:'One power dialer for cold calling',quantity:'1',rate:'0'},
+            {description:'A done-for-you website for your company',quantity:'1',rate:'0'},
+            {description:'Stripe payment access — collect payments and keep 100%',quantity:'1',rate:'0'}
+          ]},
         elite:{name:'Elite',product:'Elite Package',
           description:'Elite package — a personalised consulting plan covering niche, offer making, client acquisition and closing, tailored to your business and designed to get you booked appointments and land clients within the 60-day contract timeline.',
           notes:'{{firstName}} Thanks for choosing us. Your Elite package is personalised to your business — offer making, client acquisition and closing are all covered across the 60-day contract timeline.'},
@@ -709,8 +730,8 @@ Address"></textarea>
         {id:'website-design',title:'Website Design',tagline:'Conversion-focused website build for a client brand.',product:'Website Design & Development',timeline:'21',items:[{description:'UI/UX design (up to 6 pages)',quantity:'1',rate:'450'},{description:'Responsive front-end development',quantity:'1',rate:'550'},{description:'CMS integration (Webflow / WordPress)',quantity:'1',rate:'250'},{description:'On-page SEO setup',quantity:'1',rate:'120'},{description:'1 month of post-launch support',quantity:'1',rate:'80'}],amountPaid:700,scheduledPayment:750},
         {id:'sales-system',title:'Sales System',tagline:'End-to-end outbound + CRM setup, modeled on our Cold Emailing System.',product:'AI Sales System',timeline:'30',items:[{description:'Mailboxes Cost (20 @ $3.50)',quantity:'1',rate:'70'},{description:'Leads Cost ($50 / 10k)',quantity:'1',rate:'90'},{description:'Instantly Plan (Split)',quantity:'1',rate:'48.50'},{description:'Email Verification',quantity:'1',rate:'50'},{description:'Personalization Credits',quantity:'1',rate:'10'}],amountPaid:268.5,scheduledPayment:0},
         {id:'appointrium-academy',title:'Appointrium Academy',tagline:'Elite plan for Appointrium Academy clients.',product:'Elite Plan',timeline:'60',currency:'PKR',date:'2026-08-01',paymentTerms:'60 Days',billTo:'Musab Ali',items:[{description:'Appointrium Elite Package',quantity:'1',rate:'12000'}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.elite.description,terms:PACKAGES.elite.notes},
-        {id:'agenticmyze-quickstart',title:'Agenticmyze Quick-Start',tagline:'Consulting starter package — 1 client guaranteed in 60 days.',product:'Quick-Start Package',timeline:'60',currency:'PKR',billTo:'Ahmed',items:[{description:'Quick-Start Package — AI automation business setup (1 client guaranteed)',quantity:'1',rate:''}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.quickstart.description,terms:PACKAGES.quickstart.notes},
-        {id:'agenticmyze-business-catalyst',title:'Agenticmyze Business-Catalyst',tagline:'Consulting growth package — 2 clients guaranteed in 60 days.',product:'Business-Catalyst Package',timeline:'60',currency:'PKR',billTo:'Ahmed',items:[{description:'Business-Catalyst Package — AI automation business setup (2 clients guaranteed)',quantity:'1',rate:''}],amountPaid:0,scheduledPayment:0,notes:PACKAGES.businesscatalyst.description,terms:PACKAGES.businesscatalyst.notes},
+        {id:'agenticmyze-quickstart',title:'Agenticmyze Quick-Start',tagline:'Consulting starter package — 1 client guaranteed in 60 days.',product:'Quick-Start Plan',timeline:'60',currency:'PKR',billTo:'Ahmed',items:PACKAGES.quickstart.items,amountPaid:0,scheduledPayment:0,notes:PACKAGES.quickstart.description,terms:PACKAGES.quickstart.notes},
+        {id:'agenticmyze-business-catalyst',title:'Agenticmyze Business-Catalyst',tagline:'Consulting growth package — 2 clients guaranteed in 60 days.',product:'Business-Catalyst Plan',timeline:'60',currency:'PKR',billTo:'Ahmed',items:PACKAGES.businesscatalyst.items,amountPaid:0,scheduledPayment:0,notes:PACKAGES.businesscatalyst.description,terms:PACKAGES.businesscatalyst.notes},
         {id:'ai-cold-sms-system',title:'AI Cold SMS System',tagline:'Cold SMS outreach infrastructure — numbers, leads, platform and AI personalization.',product:'AI Cold SMS System',timeline:'30',items:[{description:'Dedicated SMS Numbers (10 @ $4.50)',quantity:'1',rate:'45'},{description:'Leads Cost ($50 / 10k)',quantity:'1',rate:'90'},{description:'SMS Platform Plan (Split)',quantity:'1',rate:'65'},{description:'Number Verification & Carrier Lookup',quantity:'1',rate:'40'},{description:'AI Personalization Credits',quantity:'1',rate:'15'}],amountPaid:255,scheduledPayment:0}
       ];
 
@@ -1423,7 +1444,10 @@ Address"></textarea>
         inv.date=todayStr();
         inv.dueDate=dueFromTimeline(inv.timeline,inv.date);
         if(n.currency&&CURRENCIES.some(function(c){return c.code===n.currency;}))inv.currency=n.currency;
-        if(n.items&&n.items.length)inv.items=n.items;
+        else if(pkg&&pkg.currency)inv.currency=pkg.currency;
+        /* Fixed package pricing: Business-Catalyst is always 59,999 PKR, Quick-Start is always 40,000 PKR, with the full item list. */
+        if(pkg&&pkg.items)inv.items=pkg.items.map(function(it){return{id:nid(),description:it.description,quantity:it.quantity,rate:it.rate};});
+        else if(n.items&&n.items.length)inv.items=n.items;
         else if(pkg)inv.items=[{id:nid(),description:pkg.product,quantity:'1',rate:''}];
         inv.channel=detectChannel(aiText+' '+(n.poNumber||''));
         if(pkg){
